@@ -13,7 +13,7 @@
 <li>	   -f:<path> Form folder path. Default form 					</li>
 <li>	   -x:<path> XSltForms folder path. Default xsltforms	        		</li>
 <li>	   -f:<path> Data folder path. Default data 					</li>
-<li>	   -p:<number> Port number (integer). Default 8080				</li>
+<li>	   -p:<number> Port number (integer). Default 8080				</li></ol>
 
 
 <h2>	 Example									</h2>
