@@ -1,3 +1,4 @@
+
 <html><body>	
 # Salvora
 <h1>	  Small XForms oriented server/utility						</h1>
@@ -69,7 +70,7 @@
 	in production machines is discouraged.						</p>
 
 <p><b>	¿ Can I open two instances on the same machine ?				</b>
-<br/> 	Yes, you can configure diferent ports on differentr routes at the same time
+<br/> 	Yes, you can configure different ports on different routes at the same time
       	in the same machine.
 </p>
 
