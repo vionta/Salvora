@@ -39,7 +39,7 @@
   <li> form [Read only  Configurable] : Predefined folder for your form.                       </li>
   <li>  data [Read + Write  Configurable] : Predefined writeable data folder.                   </li>
 </ul>
-<p>     Open a browser on http://localhos:8080/<path> and start browsing.                       </p>
+<p>     Open a browser on http://localhos:8080/<i>path</i> and start browsing.                       </p>
   
 <p>    Example paths: 	       				    	     	       		</p>
 <ul>
