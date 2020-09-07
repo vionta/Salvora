@@ -23,10 +23,8 @@
 <li>    Run simple XForms on controlled environments with simple configurations.	</li></ul>
 </p>
 
-<h2>	Usage:       									</h2>
-<p>	Download and run the executable or Jar file in the desired folder. The
-	application will serve only the following folder files:				</p>
-
+<h2>	Usage.       									</h2>
+<p>	Download and run the executable or Jar file in the desired folder.              </p>
 
 <ol>
   <li>  Jar : java -jar salvora.jar (Params)*							</li>
@@ -34,10 +32,26 @@
   <li>  Exe : salvora.exe (params)*								</li>
 </ol>
 
+<p>    The application will serve only the following folder files:				</p>
+<ul>
+  <li>  xsltforms [Read only  Configurable] : Predefined xsltform folder, intended for storing
+        and exposing the xsltforms distributions from www.agencexml.com/xsltforms.             </li>
+  <li> form [Read only  Configurable] : Predefined folder for your form.                       </li>
+  <li>  data [Read + Write  Configurable] : Predefined writeable data folder.                   </li>
+</ul>
+<p>     Open a browser on http://localhos:8080/<path> and start browsing.                       </p>
+  
+<p>    Example paths: 	       				    	     	       		</p>
+<ul>
+  <li>	 http://localhos:8080/xsltforms/xsltforms.xslt					</li>
+  <li> 	 http://localhos:8080/form/myform.xml						</li>
+  <li>	 http://194.12.45.68:8080/data/mydata.xml					</li> 
+</ul>
+
 <h2>    Configuration.									</h2>
 <p>	The following parameters can be passed to the XFServer : 			</p>
 
-<h3>	  Params									</h3>
+<h3>	  Params.									</h3>
 <ol>
   <li>     -h: Show this help message							</li>
   <li>	   -f:<path> Form folder path. Default form 					</li>
@@ -47,16 +61,10 @@
 </ol>
 
 
-<h3>	 Examples									</h3>
+<h3>	 Examples.									</h3>
 <p>	  java -jar salvora.jar						 
   <br/>	  java -cp salvora.jar net.vionta.xfserver.Salvora  -f:forms -x:xforms -p:8081	</p>
 
-<h3>    Example paths: 	       				    	     	       		</h3>
-<ul>
-  <li>	 http://localhos:8080/xsltforms/xsltforms.xslt					</li>
-  <li> 	 http://localhos:8080/form/myform.xml						</li>
-  <li>	 http://194.12.45.68:8080/data/mydata.xml					</li> 
-</ul>
 
 <p>	Salvora utility does not generate the folder content list at this moment.	</p>
 
@@ -74,7 +82,7 @@
       	in the same machine.
 </p>
 
-<h2>	Contact:									</h2>
+<h2>	Contact.									</h2>
 <p>     Salvora is provided by www.neonbluetide.com. Neon Blue Tide is part of
         www.vionta.net.                                                                 </p>
 </body>
