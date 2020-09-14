@@ -29,6 +29,7 @@ public class ServerImpl {
 	protected static void createAndRunServer(Options options) {
 		Logger logger = LoggerFactory.getLogger(ServerImpl.class);
 		Vertx vertx = Vertx.vertx();
+		
 		logger.info("Creating Server");
 		HttpServer server = vertx.createHttpServer();
 		Router router = Router.router(vertx);
