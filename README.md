@@ -39,7 +39,7 @@
   <li> form [Read only  Configurable] : Predefined folder for your form.                       </li>
   <li>  data [Read + Write  Configurable] : Predefined writeable data folder.                   </li>
 </ul>
-<p>     Open a browser on http://localhos:8080/<i>path</i> and start browsing.                       </p>
+<p>     Open a browser on http://localhos:8080/<i>your_path</i> and start browsing.                       </p>
   
 <p>    Example paths: 	       				    	     	       		</p>
 <ul>
@@ -47,6 +47,12 @@
   <li> 	 http://localhos:8080/form/myform.xml						</li>
   <li>	 http://194.12.45.68:8080/data/mydata.xml					</li> 
 </ul>
+
+<p>    Sample distribution example path: 	       				    	     	       		</p>
+<ul>
+  <li>	 http://localhos:8080/form/issuelistform.xml					</li>
+</ul>
+
 
 <h2>    Configuration.									</h2>
 <p>	The following parameters can be passed to the XFServer : 			</p>
@@ -81,6 +87,23 @@
 <br/> 	Yes, you can configure different ports on different routes at the same time
       	in the same machine.
 </p>
+
+<h2>	Troubleshooting.							</h2>
+<p><b>	Address already bind. 				</b>
+  <br/>   This message indicates that the port number is in use. Choose a different port
+  number or shutdown the other process and restart.					</p>
+
+<p><b>	Wrong Java Version. "Class file version XX".				</b>
+  <br/>
+  Salvora requires at least a Jdk 12 or newer. The following message indicates that a previous
+  version of the Jdk is being used or configured. Review the Jdk configuration and try again.
+  <br/>
+  
+  Stack trace message:<br/> 	
+java.lang.UnsupportedClassVersionError: net/vionta/xfserver/Salvora has been compiled by a more recent version of the Java Runtime (class file version 55.0), this version of the Java Runtime only recognizes class file versions up to 52.0
+</p>
+
+
 
 <h2>	Contact.									</h2>
 <p>     Salvora is provided by www.neonbluetide.com. Neon Blue Tide is part of
