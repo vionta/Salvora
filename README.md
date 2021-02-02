@@ -64,12 +64,14 @@
   <li>	   -x:<path> XSltForms folder path. Default xsltforms	        		</li>
   <li>	   -f:<path> Data folder path. Default data 					</li>
   <li>	   -p:<number> Port number (integer). Default 8080				</li>
+  <li>	   -e:<boolean> true/false Enabled or disabled external access. Default true	</li>
 </ol>
 
 
 <h3>	 Examples.									</h3>
 <p>	  java -jar salvora.jar						 
-  <br/>	  java -cp salvora.jar net.vionta.xfserver.Salvora  -f:forms -x:xforms -p:8081	</p>
+  <br/>	  java -cp salvora.jar net.vionta.xfserver.Salvora  -f:forms -x:xforms -p:8081
+  <br/>   java -jar salvora.jar -e:false                                                </p>
 
 
 <p>	Salvora utility does not generate the folder content list at this moment.	</p>
