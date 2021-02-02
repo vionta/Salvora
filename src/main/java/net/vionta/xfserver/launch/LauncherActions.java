@@ -38,6 +38,7 @@ public class LauncherActions {
 	+" -x:<path> XSltForms folder path. Default xsltforms \n"
 	+" -f:<path> Data folder path. Default data \n"
 	+" -p:<number> Port number (integer). Default 8080 \n"
+	+" -e:false Disable external access \n"
 	+" \n"
 	+" Example \n"
 	+" java -jar salvora.jar \n"
