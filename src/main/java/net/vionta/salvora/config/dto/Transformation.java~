@@ -1,0 +1,63 @@
+package net.vionta.salvora.mapping;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlType;
+
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "transformation")
+public class Transformation {
+
+    @XmlAttribute(name = "name", required = true)
+    protected String name;
+    @XmlAttribute(name = "base-path")
+    protected String basePath;
+    @XmlAttribute(name = "base-url")
+    protected String baseUrl;
+    @XmlAttribute(name = "file-list")
+    protected Boolean fileList;
+    @XmlElement(name="transformation-steps", type = TransformationStep.class)
+    protected List<TransformationStep> transformationSteps = new ArrayList<TransformationStep>();
+    
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String value) {
+        this.name = value;
+    }
+
+    public String getBasePath() {
+        return basePath;
+    }
+
+    public void setBasePath(String value) {
+        this.basePath = value;
+    }
+
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+
+    public void setBaseUrl(String value) {
+        this.baseUrl = value;
+    }
+
+    public boolean isFileList() {
+        if (fileList == null) {
+            return false;
+        } else {
+            return fileList;
+        }
+    }
+
+    public void setFileList(Boolean value) {
+        this.fileList = value;
+    }
+
+}
