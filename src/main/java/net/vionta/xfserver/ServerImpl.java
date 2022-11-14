@@ -1,25 +1,28 @@
 package net.vionta.xfserver;
 
-import java.io.IOException;
+
+import static net.vionta.xfserver.routings.HttpCommandLineRoutings.configureParameterRoutes;
+import static net.vionta.xfserver.routings.HttpRoutings.routeFolderList;
+import static net.vionta.xfserver.routings.HttpRoutings.routeGetMethod;
+import static net.vionta.xfserver.routings.HttpRoutings.routePostMethod;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServer;
-import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
-import io.vertx.ext.web.handler.BodyHandler;
-import net.vionta.xfserver.contenttype.ContentTypeResolver;
-import net.vionta.xfserver.file.DefaultFileManager;
-import net.vionta.xfserver.launch.Options;
+import net.vionta.salvora.config.dto.FileMapping;
+import net.vionta.salvora.config.dto.Transformation;
+import net.vionta.salvora.launch.Options;
+import net.vionta.xfserver.routings.TransformationRoutings;
 
 /**
  * Main Server implementation class, Routes and rules.
- *
  */
 public class ServerImpl {
+
+	static Logger LOGGER = LoggerFactory.getLogger(ServerImpl.class);
 
 	/**
 	 * Main routes and responses definition.
@@ -27,60 +30,76 @@ public class ServerImpl {
 	 * @param options Configuration options.
 	 */
 	protected static void createAndRunServer(Options options) {
-		Logger logger = LoggerFactory.getLogger(ServerImpl.class);
 		Vertx vertx = Vertx.vertx();
-		
-		logger.info("Creating Server");
+		LOGGER.info("Creating Server");
 		HttpServer server = vertx.createHttpServer();
 		Router router = Router.router(vertx);
-		router.route().path("/" + options.getFormsPath() + "/*").method(HttpMethod.GET).handler(request -> {
-			HttpServerResponse response = request.response();
-			logger.info("Serving file  : " + request.normalisedPath());
-			response.putHeader("content-type", ContentTypeResolver.resolvePath(request.request().path()));
-			DefaultFileManager.readFileBuffer(request.normalisedPath(), response);
-			response.setStatusCode(200);
-			response.end();
-		});
-		router.route().path("/" + options.getXsltformsPath() + "/*").method(HttpMethod.GET).handler(request -> {
-			HttpServerResponse response = request.response();
-			response.putHeader("content-type", ContentTypeResolver.resolvePath(request.request().path()));
-			logger.info("Serving file  : " + request.normalisedPath());
-			DefaultFileManager.readFileBuffer(request.normalisedPath(), response);
-			response.setStatusCode(200);
-			response.end();
-		});
-		router.route().path("/" + options.getDataPath() + "/*").method(HttpMethod.GET).handler(request -> {
-			HttpServerResponse response = request.response();
-			logger.info("Serving file  : " + request.normalisedPath());
-			response.putHeader("content-type", ContentTypeResolver.resolvePath(request.request().path()));
-			DefaultFileManager.readFileBuffer(request.normalisedPath(), response);
-			response.setStatusCode(200);
-			response.end();
-		});
-		router.route().handler(BodyHandler.create());
-		router.route().path("/" + options.getDataPath() + "/*").method(HttpMethod.POST).method(HttpMethod.PUT)
-				.handler(request -> {
-					HttpServerResponse response = request.response();
-					response.putHeader("content-type", ContentTypeResolver.resolvePath(request.request().path()));
-					logger.info("Writting file  : " + request.normalisedPath());
-					try {
-						DefaultFileManager.writeFile(request.normalisedPath(), request.getBodyAsString());
-						response.setStatusCode(200);
-					} catch (IOException e) {
-						logger.debug("Post request failure with cause : " + e.getMessage());
-						response.setStatusCode(500);
-					}
-					response.end();
-				});
-		router.route().handler(request -> {
-			HttpServerResponse response = request.response();
-			// Assign the content type
-			response.putHeader("content-type", ContentTypeResolver.resolvePath(request.request().path()));
-			response.setStatusCode(404);
-			response.end("Your request could not be handled, please review your request. ");
-		});
-		server.requestHandler(router).listen(options.getPort());
-		logger.info("Server listening on port " + options.getPort());
+		LOGGER.debug("Configure routes");
+		configureRoutes(options, router);
+		if(options.isExternalAccess()) {
+			server.requestHandler(router).listen(options.getPort());
+			LOGGER.info("Server listening on port " + options.getPort() );
+		} else {
+			server.requestHandler(router).listen(options.getPort(), "localhost");
+			LOGGER.info("Server listening on port " + options.getPort()+" - localhost ");
+		}
+	}
+
+	/**
+	 * Configure the vertx routes, used to 
+	 * map paths, requests and responses
+	 * 
+	 * @param options The program call parameters
+	 * @param router 
+	 */
+	private static void configureRoutes(Options options,  Router router) {
+		//if the mapping file is provided, we avoid the parameter maps. 
+		if(options.getSalvoraApplication() ==null) {
+			LOGGER.info(" Configuring parameter routes ");
+			configureParameterRoutes(options, router);
+		} else {
+			//in other case we take the old parameters
+			LOGGER.info(" Configuring file routes ");
+			configureFileRoutes(options, router);			
+		}
+	}
+	
+	/**
+	 * Configures the routes according to the 
+	 * provided mapping file.
+	 * 
+	 * @param options program parameters value object. 
+	 * @param router
+	 */
+	private static void configureFileRoutes(Options options, Router router) {
+		for(FileMapping fileMapping : options.getSalvoraApplication().getFileMappings() ) {
+			LOGGER.info(fileMapping.getDescription());
+			LOGGER.info("Routing get path "+fileMapping.getName()+" -> "+fileMapping.getBasePath());
+			routeGetMethod(router, fileMapping);
+			if(fileMapping.isFileList()) {
+				LOGGER.info("Routing List path path : "+fileMapping.getName()+" -> "+fileMapping.getBasePath());
+				routeFolderList(router, fileMapping);
+			}
+			if(fileMapping.isWriteAllowed()) {				
+				LOGGER.info("Routing write enabled path : "+fileMapping.getName()+" -> "+fileMapping.getBasePath());
+				routePostMethod(router, fileMapping);
+			}
+		}
+		for(Transformation transformation: options.getSalvoraApplication().getTransformations() ) {
+			LOGGER.info(" Loading transformation "+transformation.getName());
+			routeTransformation(router, transformation, options);
+		}
+	}
+
+	/**
+	 * Method that maps the transformations.
+	 * 
+	 * @param router
+	 * @param transformation
+	 * @param options
+	 */
+	private static void routeTransformation(Router router, Transformation transformation, Options options) {
+		TransformationRoutings.routeTransformation(router, transformation, options);
 	}
 
 }
