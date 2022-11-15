@@ -1,4 +1,6 @@
-package net.vionta.xfserver.launch;
+package net.vionta.salvora.launch;
+
+import net.vionta.salvora.config.dto.SalvoraApplication;
 
 /**
  * Options VO class with the possible 
@@ -20,6 +22,10 @@ public class Options {
 	 */
 	private String dataPath = "data";
 	/**
+	 * Mapping file.
+	 */
+	private String mappingFile ;
+	/**
 	 * IP port number. 
 	 */
 	private int port = 8080;
@@ -27,6 +33,8 @@ public class Options {
 	 * Allow external access (not yet implemented).
 	 */
 	private boolean externalAccess = true;
+	
+	private SalvoraApplication salvoraApplication;
 	
 	public String getFormsPath() {
 		return formsPath;
@@ -70,8 +78,25 @@ public class Options {
 	
 	@Override
 	public String toString() {
-		return "Options: \nformsPath=" + formsPath + " \nxsltformsPath=" + xsltformsPath + " \ndataPath=" + dataPath
-				+ "\nport=" + port + " \nexternalAccess=" + externalAccess ;
+		return "Options [formsPath=" + formsPath + ", xsltformsPath=" + xsltformsPath + ", dataPath=" + dataPath
+				+ ", mappingFile=" + mappingFile + ", port=" + port + ", externalAccess=" + externalAccess
+				+ ", salvoraApplication=" + salvoraApplication + "]";
+	}
+
+	public SalvoraApplication getSalvoraApplication() {
+		return salvoraApplication;
+	}
+
+	public void setSalvoraApplication(SalvoraApplication salvoraApplication) {
+		this.salvoraApplication = salvoraApplication;
+	}
+
+	public void setMappinFile(String mappingFileParam) {
+		this.mappingFile=mappingFileParam;		
+	}
+
+	public String getMappingFile() {
+		return mappingFile;
 	}
 	
 }
