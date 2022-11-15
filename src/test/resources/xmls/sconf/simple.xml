@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sal:salvora-application
+    xmlns:sal="net:vionta:schemas:salvora:mapping:v1.0"
+    >
+  <file-mapping
+      name="config" base-path="configuration"
+      write-allowed="false" file-list="false" >
+    <description>Configuration path</description>
+  </file-mapping>
+  <file-mapping
+      name="form" base-path="form"
+      write-allowed="false"
+      >
+  </file-mapping>
+  <file-mapping
+      name="xsltforms" base-path="xsltforms"
+      write-allowed="false" />
+  <file-mapping
+      name="data" base-path="data"
+      write-allowed="true" />
+</sal:salvora-application>
+

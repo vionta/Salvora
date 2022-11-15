@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sal:salvora-application
+    xmlns:sal="net:vionta:schemas:salvora:mapping:v1.0"
+    >
+  <file-mapping
+      name="configuration" base-path="configuration"
+      write-allowed="false" file-list="false" >
+    <description>Configuration path</description>
+  </file-mapping>
+  <file-mapping
+      name="form" base-path="form"
+      write-allowed="false"
+      >
+  </file-mapping>
+  <file-mapping
+      name="xsltforms" base-path="xsltforms"
+      write-allowed="false" />
+  <file-mapping
+      name="data" base-path="data"
+      file-list="true"
+      write-allowed="true" />
+    <file-mapping
+      name="config" base-path="config"
+      file-list="false"
+      write-allowed="true" />
+    <!--
+    <transformation name="primera"
+		    url="transformations/archivos-sample.xml"
+		    path="issues"
+		    type="local_file"
+		    >
+
+	<step name="primera" 
+	    source="transformations/lista-archivos.xsl" />
+
+    </transformation>
+    -->
+</sal:salvora-application>
+
