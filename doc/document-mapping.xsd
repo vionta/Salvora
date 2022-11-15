@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="xs3p.xsl"?>
+<xsd:schema
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+    xmlns:salvora="net:vionta:schemas:salvora:mapping:v1.0" 
+    targetNamespace="net:vionta:schemas:salvora:mapping:v1.0" 
+    version="1.0">
+  <!-- 
+       Salvora-application
+         - file-mapping
+	 - transformation
+	   - documentation
+	   - base-path
+	   - base-url
+	   - type
+	   - step
+	      - name"  type="xsd:string"
+	      - source" use="required" 
+	      - type
+	         - path-parameter
+		 - request-parameter
+
+  -->
+
+  <xsd:element name="salvora-application" >
+    <xsd:annotation>
+      <xsd:documentation>Salvora Application Mapping Description.
+      It takes file mappings (http requests over system files) and transformations (initially xslt chains).
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+	<xsd:element name="file-mapping" type="salvora:file-mapping" />
+	<xsd:element name="transformation" type="salvora:transformation" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <!-- .............. File Mapping ................ -->
+  <xsd:complexType name="file-mapping" >
+    <xsd:annotation>
+      <xsd:documentation source="documentation" xml:lang="EN">
+	A file based mapping to describe files and file based http requests. It also takes the option to
+	serve folder file list files. 
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:group ref="salvora:description-info" />
+    <xsd:attributeGroup ref="salvora:file-mapping-atts" />
+  </xsd:complexType>
+
+  <xsd:attributeGroup name="file-mapping-atts" >
+    <xsd:attribute name="name"  type="xsd:string"  />
+     <xsd:attribute name="base-url" use="required" type="xsd:string" >
+      <xsd:annotation><xsd:documentation source="documentation" xml:lang="EN">
+	Request base path.
+      </xsd:documentation></xsd:annotation>
+    </xsd:attribute>   
+    <xsd:attribute name="base-path" use="required" type="xsd:string" >
+      <xsd:annotation><xsd:documentation source="documentation" xml:lang="EN">
+	Folder base path for file access.
+      </xsd:documentation></xsd:annotation>
+    </xsd:attribute>
+    
+    <xsd:attribute name="file-list" use="optional" type="xsd:boolean" >
+      <xsd:annotation><xsd:documentation source="documentation" xml:lang="EN">
+	  Describes if a file list should be returned when requesting the folder path. Defaults to false.
+	</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="write-allowed" use="optional" type="xsd:boolean" default="false">
+      <xsd:annotation>
+	<xsd:documentation source="documentation" xml:lang="EN">
+	  Describes if POST and PUT operations (write opperations) are allowed.
+	</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="delete-allowed" use="optional" type="xsd:boolean" default="false">
+      <xsd:annotation>
+	<xsd:documentation source="documentation" xml:lang="EN">
+	  Describes if DELETE operations (write opperations) are allowed.
+	</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:attributeGroup>
+
+  <!-- ................... Transformation ................ -->
+  <xsd:complexType name="transformation" >
+    <xsd:annotation> 
+      <xsd:documentation source="documentation" xml:lang="EN"> 
+ 	At least one of base-path or network-path should be defined,  
+ 	Base path defines a file access path, while the base  
+ 	url is used for network access calls. The content  
+	is afterwards transformed with the xslt.
+    </xsd:documentation> </xsd:annotation>
+    
+    <xsd:attributeGroup ref="salvora:transformation-attributes" />
+    <xsd:group name="transformation-step" type="salvora:transformation-elements" />
+
+  </xsd:complexType>
+  
+  <xsd:attributeGroup name="transformation-attributes" >
+    <xsd:attribute name="name" use="required" type="xsd:string"  />
+    <xsd:attribute name="path" type="xsd:string" >
+      <xsd:annotation>
+	<xsd:documentation source="documentation" xml:lang="EN">
+	  Base file path, as a source of transformation content. 
+	</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="base-path" type="xsd:string" >
+      <xsd:annotation>
+	<xsd:documentation source="documentation" xml:lang="EN">
+	  Base file path, as a source of transformation content. 
+	</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="base-url"  type="xsd:string" >
+      <xsd:annotation>
+	<xsd:documentation source="documentation" xml:lang="EN">
+	  Base network path (local or remote) that can be used to request
+	  the source of the transformation content. 
+	</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="url"  type="xsd:string" >
+      <xsd:annotation>
+	<xsd:documentation source="documentation" xml:lang="EN">
+	  Base network path (local or remote) that can be used to request
+	  the source of the transformation content. 
+	</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="type"   >
+      <xsd:annotation>
+	<xsd:documentation source="documentation" xml:lang="EN">
+	  network or local (local by default)
+	</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+	<xsd:restriction base="xsd:string">
+	  <!-- local file -->
+	  <xsd:enumeration value="local_file"/>
+	  <!-- call to the local instance (http) -->
+	  <xsd:enumeration value="local_network"/>
+	  <!-- call to remote network instance (http) -->
+	  <xsd:enumeration value="remote_network"/>
+	</xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+   </xsd:attributeGroup>
+
+  <xsd:group name="transformation-elements" >
+    <xsd:sequence>
+      <xsd:element name="step" type="salvora:transformation-step" />
+    </xsd:sequence>
+  </xsd:group>
+    
+  <xsd:complexType name="transformation-step" >
+    <xsd:attributeGroup ref="salvora:transformation-step-attributes" />
+    <xsd:group ref="salvora:transformation-step-elements" />
+  </xsd:complexType>
+  
+  <xsd:attributeGroup name="transformation-step-attributes" >
+    <xsd:attribute name="name"  type="xsd:string"  />
+    <xsd:attribute name="source" use="required" type="xsd:string"  />
+    <xsd:attribute name="type" use="required" type="xsd:string"  />
+  </xsd:attributeGroup>
+
+  <xsd:group name="transformation-step-elements" >
+    <xsd:sequence>
+      <xsd:element name="path-parameter" type="salvora:path-parameter" />
+      <xsd:element name="request-parameter" type="salvora:request-parameter" />      
+    </xsd:sequence>
+  </xsd:group>  
+
+  <xsd:complexType name="path-parameter">
+    <xsd:annotation>
+      <xsd:documentation source="documentation" xml:lang="EN">
+	Parameter element, used to map request url path parts to xslt parameters. 
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="request-key" type="xsd:string" />
+    <xsd:attribute name="xslt-param-name" type="xsd:string" />
+  </xsd:complexType>
+
+  <xsd:complexType name="request-parameter">
+    <xsd:attribute name="request-key" type="xsd:string" />
+    <xsd:attribute name="xslt-param-name" type="xsd:string" />
+  </xsd:complexType>
+
+  <xsd:group name="description-info" >
+    <xsd:sequence>
+      <xsd:element name="description"  type="xsd:string" maxOccurs="1" />
+    </xsd:sequence>
+  </xsd:group>
+
+</xsd:schema>
