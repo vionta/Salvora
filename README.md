@@ -5,13 +5,17 @@
 
 <h2>	  Introduction.									</h2>
 <p>	  Salvora is a small and simple utility to serve XSLTForms (see
-	  http://www.agencexml.com/xsltforms.htm for more details about XSLTForms)
-	  applications locally, without embedding them in a full application server.
+          http://www.agencexml.com/xsltforms.htm for more details about XSLTForms)
+          applications locally, or manage small xforms applications, without embedding
+          them in a full application server.
 	  Current browsers tend to limit some of the functionalities of XSLT and
 	  XForms when run directly from local file systems.
 </p>
 <p>	Salvora utility server also exposes a data folder with REST read and write
-	access.										</p>  
+        access. The current version of Salvora can manage several folders with read
+        or read/write access. With the mapping file configuration you can also print
+        the folder file lists when needed or even configure transformatios or
+        small transformation chains.</p>  
 
 <h2> 	Use cases. 	       	    	      	   	       	    	     	   	</h2>
 <p>	Salvora is a simple and easy way to run XForms directly from local folders. 
@@ -29,8 +33,11 @@
 <ol>
   <li>  Jar : java -jar salvora.jar (Params)*							</li>
   <li>  java :java -cp salvora.jar net.vionta.xfserver.Salvora  -f:forms -x:xforms -p:8081	</li>
+  <li>  java :java -jar salvora-fat-version.jar -p:8081 -m:simple (with a provided configuration file) 	</li>
   <li>  Exe : salvora.exe (params)*								</li>
 </ol>
+
+<h3>	Command Line Usage.       								</h3>
 
 <p>    The application will serve only the following folder files:				</p>
 <ul>
@@ -52,7 +59,17 @@
 <ul>
   <li>	 http://localhos:8080/form/issuelistform.xml					</li>
 </ul>
+<h3>	Mapping File Ussage.       								</h3>
 
+<p>    With a mapping file you can define:				</p>
+<ul>
+  <li>File folders, with or without write access and with or without printing the folder file list. </li>
+  <li>Transformations and small transformation chains over local files and file collections. </li>
+  <li>Transformations and small transformation chains over local http files and file collections . </li>
+  <li>Transformations and small transformation chains over remote http files and file collections (SOON) . </li>
+</ul>
+<p>At this moment the file mapping is being developed and documented. Please come back soon. </p>
+<p>A schema for the mapping file is provided at the doc folder. </p>
 
 <h2>    Configuration.									</h2>
 <p>	The following parameters can be passed to the XFServer : 			</p>
@@ -65,6 +82,8 @@
   <li>	   -f:<path> Data folder path. Default data 					</li>
   <li>	   -p:<number> Port number (integer). Default 8080				</li>
   <li>	   -e:<boolean> true/false Enabled or disabled external access. Default true	</li>
+  <li>	   -m:<file path/name> The name of the mapping file	</li>
+  
 </ol>
 
 
