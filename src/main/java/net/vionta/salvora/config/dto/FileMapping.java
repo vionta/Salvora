@@ -1,5 +1,9 @@
 package net.vionta.salvora.config.dto;
 
+
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -8,11 +12,11 @@ import jakarta.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "file-mapping", propOrder = {
-    "description"
+    "description", "triggers"
 })
 public class FileMapping {
 
-    @XmlElement(required = true)
+    @XmlElement(required = false)
     protected String description;
     @XmlAttribute(name = "name", required = false)
     protected String name;
@@ -26,6 +30,9 @@ public class FileMapping {
     protected Boolean writeAllowed = false ;
     @XmlAttribute(name = "delete-allowed")
     protected Boolean deleteAllowed = false;
+
+    @XmlElement(name="trigger", type = Trigger.class)
+    protected List<Trigger> triggers = new ArrayList<Trigger>();
 
     public String getDescription() {
         return description;
@@ -84,11 +91,24 @@ public class FileMapping {
 	}
 
 	public String getBaseUrl() {
-		return baseUrl;
+		if(baseUrl == null) return getBasePath();
+		else return baseUrl;
 	}
 
 	public void setBaseUrl(String baseUrl) {
 		this.baseUrl = baseUrl;
+	}
+
+	public List<Trigger> getTriggers() {
+		return triggers;
+	}
+
+	public void setTriggers(List<Trigger> triggers) {
+		this.triggers = triggers;
+	}
+
+	public Boolean getWriteAllowed() {
+		return writeAllowed;
 	}
 
 	@Override
