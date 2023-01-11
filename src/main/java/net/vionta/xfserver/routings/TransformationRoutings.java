@@ -1,10 +1,16 @@
 package net.vionta.xfserver.routings;
 
-import java.io.IOException;
 
+import static net.vionta.salvora.util.response.Response.close;
+import static net.vionta.salvora.util.response.Response.writeContent;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -16,14 +22,17 @@ import org.xml.sax.SAXException;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
+import net.vionta.salvora.config.dto.PathParameter;
+import net.vionta.salvora.config.dto.RequestParameter;
 import net.vionta.salvora.config.dto.Transformation;
 import net.vionta.salvora.config.dto.TransformationStep;
 import net.vionta.salvora.launch.Options;
-import net.vionta.salvora.util.contenttype.ContentTypeResolver;
+import net.vionta.salvora.util.file.FolderList;
 import net.vionta.salvora.util.file.NetworkFileReader;
+import net.vionta.salvora.util.xml.StringReplacementTransform;
 import net.vionta.salvora.util.xml.XsltTransform;
 import net.vionta.xfserver.ServerImpl;
-
 /**
  * Creates the vertx mapping for the 
  * transformations, according to the mapping 
@@ -32,6 +41,7 @@ import net.vionta.xfserver.ServerImpl;
 public class TransformationRoutings {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(ServerImpl.class);
+	private static List<PathParameter> pathParameters;
 
 	/**
 	 * Configures a vertx route for a determined 
@@ -49,49 +59,125 @@ public class TransformationRoutings {
 			HttpServerResponse response = request.response();
 			LOGGER.debug("Logging transformation "+transformation);
 			try {
+				TriggerChainProcces.beforeTriggers(transformation.getTriggers());
 				if(Transformation.LOCAL_SOURCE_TYPE.equals(transformation.getType())) {
-					try {
-						LOGGER.debug("Local Source: 1");
-						LOGGER.debug(transformation.toString());
-						LOGGER.debug(" Steps " +(transformation.getTransformationSteps() != null ));
-						LOGGER.debug(" Steps " +transformation.getTransformationSteps().size());
-						
-						Iterator<TransformationStep> it = transformation.getTransformationSteps().iterator();
-						
-						TransformationStep step = it.next();
-						LOGGER.debug("Step 2"+step.getName() +" "+step.getSource());
-						String content;	
-						content = XsltTransform.transformDocument(TransformationUrlCalculation.convertInternalUrl(request.normalisedPath(), transformation), step.getSource());
-						LOGGER.debug("conent:  "+content);
-						content = chainNextTransformations(it, content);
-						LOGGER.debug("conent (chained) :  "+content);
-						LOGGER.debug("Writing content: ");
-						response.putHeader("Content-length", Integer.toString(content.getBytes().length));
-						response.putHeader("Content-type", ContentTypeResolver.resolvePath(request.request().path()));
-						response.write(content);
-					} catch (Exception e) {
-						LOGGER.warn("Error in transformation: "+e.getMessage());
-						ErrorManager.notifyError(response, "Error handling transformation");
-					}
-				} else if (Transformation.LOCAL_NETWORK_SOURCE_TYPE.equals(transformation.getType()) || Transformation.REMOTE_NETWORK_SOURCE_TYPE.equals(transformation.getType())) {
-					LOGGER.info("Transforming "+transformation.getName() +" | "+transformation.getPath()+" -> "+transformation.getUrl());
-					URL initialContentUrl = new URL(TransformationUrlCalculation.calculateCallUrl(transformation , request.normalisedPath(), String.valueOf(options.getPort()), TransformationUrlCalculation.HTTP_SCHEME));
-					String initialContent = NetworkFileReader.readNetworkUrlToString(initialContentUrl);
-					String content = chainTransformations(transformation.getTransformationSteps(), initialContent);	
-					response.putHeader("Content-length", Integer.toString(content.getBytes().length));
-					response.putHeader("Content-type", ContentTypeResolver.resolvePath(request.request().path()));
-					response.write(content);
+					localSourceRoute(transformation, request, response);
+				} else if ( Transformation.REMOTE_NETWORK_SOURCE_TYPE.equals(transformation.getType())) {
+					RemoteNetworkSource(transformation, options, request, response);
+				} else if ( Transformation.LOCAL_DIRECTORY_LISTING.equals(transformation.getType())) {
+					LocalDirectoryMapping(transformation, options, request, response);
 				}
+				TriggerChainProcces.afterTriggers(transformation.getTriggers());
 			} catch (TransformerException | SAXException | IOException | ParserConfigurationException e) {
 				LOGGER.warn("Error while performing transformation : " , e.getMessage());
-				ErrorManager.notifyError(response, "Transformation type not recognised or not informad");
+				ErrorManager.notifyError(response, "Transformation type not recognised or not informed, valid values are local_file, directory_listing and remote_network ");
 			}
-				response.setStatusCode(200);
-				response.end();
+			close(response);
 		});
 	}
 
 
+
+	private static void localSourceRoute(Transformation transformation, RoutingContext request,
+			HttpServerResponse response) {
+		try {
+			LOGGER.debug("Local Source: 1");
+			LOGGER.debug(transformation.toString());
+			LOGGER.debug(" Steps " +(transformation.getTransformationSteps() != null ));
+			LOGGER.debug(" Steps " +transformation.getTransformationSteps().size());
+			Iterator<TransformationStep> it = transformation.getTransformationSteps().iterator();
+			TransformationStep step = it.next();
+			LOGGER.debug("Step 2 : "+step.getName() +" - "+step.getType());
+			String content;	
+			Map<String, String> parameters = buildTransformationParameterMap(step, request);
+			LOGGER.debug("Step 2"+request.normalisedPath() +" "+step.getType());
+			LOGGER.debug(" - "+transformation.getBaseUrl());
+			LOGGER.debug(" - "+transformation.getBasePath().length());
+			LOGGER.debug(" - "+request.normalisedPath().substring(transformation.getBasePath().length()+1));
+			String convertInternalUrl = TransformationUrlCalculation.convertInternalUrl(request.normalisedPath(), transformation);
+			if (TransformationStep.TRANSFORMATION_TYPE_XSLT.equals(step.getType())) {							
+				content = XsltTransform.transformDocument(convertInternalUrl, step.getSource(), parameters);
+			} else if(TransformationStep.TRANSFORMATION_TYPE_STRING.equals(step.getType())) {
+				LOGGER.debug("Transforming String");
+				LOGGER.debug("Parameters :"+parameters);
+				content = StringReplacementTransform.transformDocument(convertInternalUrl, parameters);							
+			} else throw new IllegalStateException("Transformation type not configured or non valid yet");
+			LOGGER.debug("conent:  "+content);
+			content = chainNextTransformations(it, content, request);
+			LOGGER.debug("conent (chained) :  "+content);
+			LOGGER.debug("Writing content: ");
+//			response.putHeader("Content-length", Integer.toString(content.getBytes().length));
+//			response.putHeader("Content-type", ContentTypeResolver.resolvePath(request.request().path()));
+//			response.write(content);
+			writeContent(response, request.request(), content);
+		} catch (Exception e) {
+			LOGGER.warn("Error in transformation: "+e.getMessage());
+			ErrorManager.notifyError(response, "Error handling transformation");
+		}
+	}
+
+	private static void LocalDirectoryMapping(Transformation transformation, Options options, RoutingContext request,
+			HttpServerResponse response) throws MalformedURLException, IOException, TransformerException, SAXException,
+			ParserConfigurationException {
+		String calculateCallUrl = TransformationUrlCalculation.calculateCallUrl(transformation , request.normalisedPath(), String.valueOf(options.getPort()), TransformationUrlCalculation.HTTP_SCHEME);
+		LOGGER.debug("Call URL  (1) "+calculateCallUrl);
+		String initialContent = FolderList.printFolderContent(calculateCallUrl);
+		String content = chainTransformations(transformation.getTransformationSteps(), initialContent, request);	
+		LOGGER.debug("Content : "+content);
+//		response.putHeader("Content-length", Integer.toString(content.getBytes().length));
+//		response.putHeader("Content-type", ContentTypeResolver.resolvePath(request.request().path()));
+//		response.write(content);
+		writeContent(response, request.request(), content);
+
+	}
+
+	private static void RemoteNetworkSource(Transformation transformation, Options options, RoutingContext request,
+			HttpServerResponse response) throws MalformedURLException, IOException, TransformerException, SAXException,
+	ParserConfigurationException {
+		LOGGER.info("Transforming "+transformation.getName() +" | "+transformation.getPath()+" -> "+transformation.getUrl());
+		String calculateCallUrl = TransformationUrlCalculation.calculateCallUrl(transformation , request.normalisedPath(), String.valueOf(options.getPort()), TransformationUrlCalculation.HTTP_SCHEME);
+		LOGGER.debug("Call URL  (1) "+calculateCallUrl);
+		URL initialContentUrl = new URL(calculateCallUrl);
+		LOGGER.debug("Initial URL  (1) "+initialContentUrl);
+		
+		String initialContent = NetworkFileReader.readNetworkUrlToString(initialContentUrl);
+		LOGGER.debug("Content : "+initialContent);
+		String content = chainTransformations(transformation.getTransformationSteps(), initialContent, request);	
+		LOGGER.debug("Content : "+content);
+//		response.putHeader("Content-length", Integer.toString(content.getBytes().length));
+//		response.putHeader("Content-type", ContentTypeResolver.resolvePath(request.request().path()));
+//		response.write(content);
+		writeContent(response, request.request(), content);
+
+	}
+
+
+
+	/**
+	 * Prepares the list of parameters from the step.
+	 * @param step 
+	 * @param request
+	 * @return The list of parameters for the Xslt Transformation
+	 */
+	private static Map<String, String> buildTransformationParameterMap(TransformationStep step,
+			RoutingContext request) {
+		Map<String, String> transformationParameters = new Hashtable<String, String>();
+		//Handle list of path Parameters
+		for(PathParameter param: step.getPathParameters()) {
+			transformationParameters.put(param.getTransformationParamName(), request.pathParam(param.getRequestKey()));
+		}
+
+		// Handle list of query params
+		for(RequestParameter param: step.getRequestParameters()) {
+			//Query params have multiple values
+			List<String> queryParam = request.queryParam(param.getRequestKey());
+			if(queryParam != null && !queryParam.isEmpty()) {
+				String queryParamValue = queryParam.get(0);
+				transformationParameters.put(param.getTransformationParamName(), queryParamValue);
+			}
+		}
+		return transformationParameters;
+	}
 
 	/**
 	 * Performs a chain of transformations over 
@@ -100,17 +186,20 @@ public class TransformationRoutings {
 	 * @param transformationSteps
 	 * @param initialContent
 	 * @return
+	 * @throws ParserConfigurationException
 	 * @throws TransformerException
 	 * @throws SAXException
 	 * @throws IOException
-	 * @throws ParserConfigurationException
 	 */
-	private static String chainTransformations(List<TransformationStep> transformationSteps, String initialContent) throws TransformerException, SAXException, IOException, ParserConfigurationException {
+	private static String chainTransformations(List<TransformationStep> transformationSteps, String initialContent, RoutingContext request) 
+				throws TransformerException, SAXException, IOException, ParserConfigurationException {
 		String content = initialContent;
 		LOGGER.info("Initial Content: "+content);
 		for( TransformationStep step: transformationSteps) {
-			content = XsltTransform.transformDocumentFromContent(content, step.getSource());
 			LOGGER.info("Step : "+step.getName());
+			Map<String, String> parameters = buildTransformationParameterMap(step, request);
+			content = XsltTransform.transformDocumentFromContent(content, step.getSource(), parameters);
+			LOGGER.debug(" Content : "+content);
 		} 
 		return content;
 	}
@@ -131,13 +220,18 @@ public class TransformationRoutings {
 	 * @throws IOException
 	 * @throws ParserConfigurationException
 	 */
-	private static String chainNextTransformations(Iterator<TransformationStep> it, String content)
+	private static String chainNextTransformations(Iterator<TransformationStep> it, String content, RoutingContext request)
 		throws TransformerException, SAXException, IOException, ParserConfigurationException {
 		TransformationStep step;
 		if(it.hasNext()) 
 			do  {
 				step =  it.next();
-				content = XsltTransform.transformDocumentFromContent(content, step.getSource());
+				Map<String, String> parameters = buildTransformationParameterMap(step, request);
+				if(step.TRANSFORMATION_TYPE_XSLT.equals(step.getType())) {
+					content = XsltTransform.transformDocumentFromContent(content, step.getSource(), parameters);
+				} else if(TransformationStep.TRANSFORMATION_TYPE_STRING.equals(step.getType())) {
+					content = StringReplacementTransform.transformDocumentFromContent(content, parameters); 
+				} else throw new IllegalStateException("Transformation type not configured or non valid yet");
 				LOGGER.info("Content n :"+content);
 			} while (it.hasNext());
 		return content;
