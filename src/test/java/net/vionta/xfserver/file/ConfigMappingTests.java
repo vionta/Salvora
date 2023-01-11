@@ -1,6 +1,6 @@
 package net.vionta.xfserver.file;
 
-import static net.vionta.salvora.config.manager.SalvoraConfigFileInterpreter.readMappingFile;
+import static net.vionta.salvora.launch.SalvoraConfigFileInterpreter.readMappingFile;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
