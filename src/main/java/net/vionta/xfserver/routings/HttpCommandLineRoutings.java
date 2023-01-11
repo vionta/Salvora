@@ -1,5 +1,7 @@
 package net.vionta.xfserver.routings;
 
+
+
 import java.io.IOException;
 
 import org.slf4j.Logger;
@@ -8,11 +10,14 @@ import org.slf4j.LoggerFactory;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 import net.vionta.salvora.launch.Options;
 import net.vionta.salvora.util.contenttype.ContentTypeResolver;
 import net.vionta.salvora.util.file.DefaultFileManager;
+import net.vionta.salvora.util.response.Response;
 import net.vionta.xfserver.ServerImpl;
+import static net.vionta.salvora.util.response.Response.close;
 
 /**
  * This class handles the mappings according to 
@@ -31,38 +36,24 @@ public final class HttpCommandLineRoutings {
 	 */
 	public static void configureParameterRoutes(Options options,  Router router) {
 		router.route().path("/" + options.getFormsPath() + "/*").method(HttpMethod.GET).handler(request -> {
-			HttpServerResponse response = request.response();
-			LOGGER.info("Serving file  : " + request.normalisedPath());
-			response.putHeader("content-type", ContentTypeResolver.resolvePath(request.request().path()));
-			response.sendFile("./"+request.normalisedPath());
-			response.setStatusCode(200);
-			response.end();
+			sendFile(request);
 		});
 		router.route().path("/" + options.getXsltformsPath() + "/*").method(HttpMethod.GET).handler(request -> {
-			HttpServerResponse response = request.response();
-			response.putHeader("content-type", ContentTypeResolver.resolvePath(request.request().path()));
-			LOGGER.info("Serving file  : " + request.normalisedPath());
-			response.sendFile("./"+request.normalisedPath());
-			response.setStatusCode(200);
-			response.end();
+			sendFile(request);
 		});
 		router.route().path("/" + options.getDataPath() + "/*").method(HttpMethod.GET).handler(request -> {
-			HttpServerResponse response = request.response();
-			LOGGER.info("Serving file  : " + request.normalisedPath());
-			response.putHeader("content-type", ContentTypeResolver.resolvePath(request.request().path()));
-			response.sendFile("./"+request.normalisedPath());
-			response.setStatusCode(200);
-			response.end();
+			sendFile(request);
 		});
 		router.route().handler(BodyHandler.create());
 		router.route().path("/" + options.getDataPath() + "/*").method(HttpMethod.POST).method(HttpMethod.PUT)
 				.handler(request -> {
 					HttpServerResponse response = request.response();
-					response.putHeader("content-type", ContentTypeResolver.resolvePath(request.request().path()));
 					LOGGER.info("Writting file  : " + request.normalisedPath());
 					try {
+						Response.contentTypeHeader(response, request.request());
+//						response.putHeader("content-type", ContentTypeResolver.resolvePath(request.request().path()));
 						DefaultFileManager.writeFile(request.normalisedPath(), request.getBodyAsString());
-						response.setStatusCode(200);
+						close(response);
 					} catch (IOException e) {
 						LOGGER.debug("Post request failure with cause : " + e.getMessage());
 						response.setStatusCode(500);
@@ -77,6 +68,17 @@ public final class HttpCommandLineRoutings {
 			response.setStatusCode(404);
 			response.end("Your request could not be handled, please review your request. ");
 		});
+	}
+
+	/**
+	 * Reads a file and sends it as a response. 
+	 * 
+	 * @param request RoutingContext
+	 */
+	private static void sendFile(RoutingContext request) {
+		String url = "./"+request.normalisedPath();
+		LOGGER.info("Serving file  : " + url);
+		Response.sendFile(request, url);
 	}
 	
 }
