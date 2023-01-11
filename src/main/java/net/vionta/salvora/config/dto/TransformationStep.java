@@ -13,6 +13,10 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "step")
 public class TransformationStep {
 
+	public static final String TRANSFORMATION_TYPE_XSLT ="xslt";
+	public static final String TRANSFORMATION_TYPE_XQUERY ="xquery";
+	public static final String TRANSFORMATION_TYPE_STRING ="string";
+		
     @XmlAttribute(name = "name")
     protected String name;
     @XmlAttribute(name = "source", required = true)
@@ -24,7 +28,10 @@ public class TransformationStep {
     protected List<PathParameter> pathParameters = new ArrayList<PathParameter>();
     @XmlElement(name="request-parameter", type = RequestParameter.class)
     protected List<RequestParameter> requestParameters = new ArrayList<RequestParameter>();
+    @XmlElement(name="parameter", type = Parameter.class)
+    protected List<Parameter> parameters = new ArrayList<Parameter>();
 
+    
     public String getName() {
         return name;
     }
@@ -63,6 +70,14 @@ public class TransformationStep {
 
 	public void setRequestParameters(List<RequestParameter> requestParameters) {
 		this.requestParameters = requestParameters;
+	}
+
+	public List<Parameter> getParameters() {
+		return parameters;
+	}
+
+	public void setParameters(List<Parameter> parameters) {
+		this.parameters = parameters;
 	}
 
 	@Override
