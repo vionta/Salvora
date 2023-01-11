@@ -25,7 +25,7 @@ class XsltTransformBasicTests {
 	@Test
 	void test() throws TransformerException, SAXException, IOException, ParserConfigurationException {
 		String correctionPath = "./src/test/resources/";
-		String transformDocumentContent = transformDocument(correctionPath+"xmls/sample-jmeter.xml", correctionPath+"xslts/jmeter2html.xsl");
+		String transformDocumentContent = transformDocument(correctionPath+"xmls/jmeter/jmeter.xml", correctionPath+"xslts/jmeter2html.xsl", null);
 		LOGGER.debug(transformDocumentContent);
 		assertTrue(transformDocumentContent.indexOf("Consulta de ejemplo")>-1);
 	}
@@ -33,9 +33,9 @@ class XsltTransformBasicTests {
 	@Test
 	void testTransformMultiple() throws TransformerException, SAXException, IOException, ParserConfigurationException {
 		String correctionPath = "./src/test/resources/";
-		String transformDocumentContent = transformDocument(correctionPath+"xmls/sample-jmeter.xml", correctionPath+"xslts/jmeter2html.xsl");
+		String transformDocumentContent = transformDocument(correctionPath+"xmls/jmeter/jmeter.xml", correctionPath+"xslts/jmeter2html.xsl", null);
 		LOGGER.debug(transformDocumentContent);
-		transformDocumentContent = transformDocumentFromContent(transformDocumentContent, correctionPath+"xslts/jmeter2html.xsl");
+		transformDocumentContent = transformDocumentFromContent(transformDocumentContent, correctionPath+"xslts/jmeter2html.xsl", null);
 		LOGGER.debug(transformDocumentContent);
 		assertTrue(transformDocumentContent.indexOf("body>")>-1);
 	}
