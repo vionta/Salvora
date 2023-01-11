@@ -32,7 +32,7 @@ public class Options {
 	/**
 	 * Allow external access (not yet implemented).
 	 */
-	private boolean externalAccess = true;
+	private boolean externalAccess = false;
 	
 	private SalvoraApplication salvoraApplication;
 	
