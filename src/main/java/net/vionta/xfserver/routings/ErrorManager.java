@@ -1,7 +1,7 @@
 package net.vionta.xfserver.routings;
 
 import io.vertx.core.http.HttpServerResponse;
-import net.sf.saxon.functions.MathFunctionSet.Log10Fn;
+import static net.vionta.salvora.util.response.Response.close;
 
 
 /**
@@ -19,8 +19,7 @@ public class ErrorManager {
 	 */
 	public static void notifyError(HttpServerResponse response, String message) {
 		response.write(message);
-		response.setStatusCode(500);
-		response.end();
+		close(response, 500);
 	}
 
 }
