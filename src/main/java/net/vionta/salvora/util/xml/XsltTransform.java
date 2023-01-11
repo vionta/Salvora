@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
+import java.util.Map;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -47,17 +49,29 @@ public class XsltTransform {
 	 * @throws IOException
 	 * @throws ParserConfigurationException
 	 */
-	public static String transformDocument(String dataFile, String stylesheetFile) throws TransformerException, SAXException, IOException, ParserConfigurationException {
+	public static String transformDocument(String dataFile, String stylesheetFile, Map<String, String> parameters) throws TransformerException, SAXException, IOException, ParserConfigurationException {
 		LOGGER.info("Transforming :"+dataFile+" with "+stylesheetFile);
 		Transformer transformer = buildTransformer(stylesheetFile);
+		// Add the xslt parameters			
+		if(parameters != null && !parameters.isEmpty()) {
+			for(Map.Entry<String, String> entry: parameters.entrySet()) {
+				transformer.setParameter(entry.getKey(), entry.getValue());
+			}
+		}
         StringWriter stringWriter = new StringWriter();
         transformer.transform(loadDomSource(dataFile), new StreamResult(stringWriter));
         return stringWriter.toString();
 	}
 
-	public static String transformDocumentFromContent(String content, String stylesheetFile) throws TransformerException, SAXException, IOException, ParserConfigurationException {
+	public static String transformDocumentFromContent(String content, String stylesheetFile, Map<String, String> parameters) throws TransformerException, SAXException, IOException, ParserConfigurationException {
 		LOGGER.info("Transforming content with "+stylesheetFile);
 		Transformer transformer = buildTransformer(stylesheetFile);
+		// Add the xslt parameters			
+		if(parameters != null && !parameters.isEmpty()) {
+			for(Map.Entry<String, String> entry: parameters.entrySet()) {
+				transformer.setParameter(entry.getKey(), entry.getValue());
+			}
+		}
 		StringWriter stringWriter = new StringWriter();
 		transformer.transform(loadDomSourceFromContent(content), new StreamResult(stringWriter));
 		String result = stringWriter.toString();
