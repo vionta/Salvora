@@ -4,7 +4,7 @@ import static net.vionta.xfserver.ServerImpl.createAndRunServer;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
-import net.vionta.salvora.launch.LauncherActions;
+import net.vionta.salvora.launch.Actions;
 import net.vionta.salvora.launch.Options;
 
 import org.slf4j.Logger;
@@ -18,9 +18,9 @@ public class Salvora  extends AbstractVerticle {
     public static void main(String[] args) throws Exception {
 	Logger log = LoggerFactory.getLogger(Salvora.class);
 	log.info("Starting Server");
-	if(LauncherActions.checkForHelp(args)) System.exit(0);
-	Options options = LauncherActions.getOptions(args);
-	LauncherActions.printOptions(options);
+	if(Actions.checkForHelp(args)) System.exit(0);
+	Options options = Actions.getOptions(args);
+	Actions.printOptions(options);
 	createAndRunServer(options);
 	log.info("Server initialized");
 	 
@@ -30,8 +30,8 @@ public class Salvora  extends AbstractVerticle {
     public void start(Promise<Void> startPromise) throws Exception {
     	Logger log = LoggerFactory.getLogger(Salvora.class);
     	log.info("Starting Server");
-    	Options options = LauncherActions.buildDefaultOptions();
-    	LauncherActions.printOptions(options);
+    	Options options = Actions.buildDefaultOptions();
+    	Actions.printOptions(options);
     	createAndRunServer(options);
     	log.info("Server initialized");
     }
