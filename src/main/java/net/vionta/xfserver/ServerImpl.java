@@ -1,10 +1,12 @@
 package net.vionta.xfserver;
 
 
+
 import static net.vionta.xfserver.routings.HttpCommandLineRoutings.configureParameterRoutes;
 import static net.vionta.xfserver.routings.HttpRoutings.routeFolderList;
 import static net.vionta.xfserver.routings.HttpRoutings.routeGetMethod;
 import static net.vionta.xfserver.routings.HttpRoutings.routePostMethod;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +17,7 @@ import io.vertx.ext.web.Router;
 import net.vionta.salvora.config.dto.FileMapping;
 import net.vionta.salvora.config.dto.Transformation;
 import net.vionta.salvora.launch.Options;
-import net.vionta.xfserver.routings.TransformationRoutings;
+import static net.vionta.xfserver.routings.TransformationRoutings.routeTransformation;
 
 /**
  * Main Server implementation class, Routes and rules.
@@ -74,14 +76,14 @@ public class ServerImpl {
 	private static void configureFileRoutes(Options options, Router router) {
 		for(FileMapping fileMapping : options.getSalvoraApplication().getFileMappings() ) {
 			LOGGER.info(fileMapping.getDescription());
-			LOGGER.info("Routing get path "+fileMapping.getName()+" -> "+fileMapping.getBasePath());
+			LOGGER.info("Routing get path "+fileMapping.getName()+" : "+fileMapping.getBasePath()+" -> "+fileMapping.getBaseUrl());
 			routeGetMethod(router, fileMapping);
 			if(fileMapping.isFileList()) {
-				LOGGER.info("Routing List path path : "+fileMapping.getName()+" -> "+fileMapping.getBasePath());
+				LOGGER.info("Routing List path path : "+fileMapping.getName()+" : "+fileMapping.getBasePath()+" -> "+fileMapping.getBaseUrl());
 				routeFolderList(router, fileMapping);
 			}
 			if(fileMapping.isWriteAllowed()) {				
-				LOGGER.info("Routing write enabled path : "+fileMapping.getName()+" -> "+fileMapping.getBasePath());
+				LOGGER.info("Routing write enabled path : "+fileMapping.getName()+" -> "+fileMapping.getBasePath()+" -> "+fileMapping.getBaseUrl());
 				routePostMethod(router, fileMapping);
 			}
 		}
@@ -91,15 +93,5 @@ public class ServerImpl {
 		}
 	}
 
-	/**
-	 * Method that maps the transformations.
-	 * 
-	 * @param router
-	 * @param transformation
-	 * @param options
-	 */
-	private static void routeTransformation(Router router, Transformation transformation, Options options) {
-		TransformationRoutings.routeTransformation(router, transformation, options);
-	}
 
 }
