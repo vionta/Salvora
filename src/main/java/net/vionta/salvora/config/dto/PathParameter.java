@@ -34,8 +34,8 @@ public class PathParameter {
 
     @XmlAttribute(name = "request-key")
     protected String requestKey;
-    @XmlAttribute(name = "xslt-param-name")
-    protected String xsltParamName;
+    @XmlAttribute(name = "transformation-param-name")
+    protected String transformationParamName;
 
     /**
      * Obtiene el valor de la propiedad requestKey.
@@ -69,8 +69,8 @@ public class PathParameter {
      *     {@link String }
      *     
      */
-    public String getXsltParamName() {
-        return xsltParamName;
+    public String getTransformationParamName() {
+        return transformationParamName;
     }
 
     /**
@@ -81,8 +81,13 @@ public class PathParameter {
      *     {@link String }
      *     
      */
-    public void setXsltParamName(String value) {
-        this.xsltParamName = value;
+    public void setTransformationParamName(String value) {
+        this.transformationParamName = value;
     }
+
+	@Override
+	public String toString() {
+		return "PathParameter [requestKey=" + requestKey + ", transformationParamName=" + transformationParamName + "]";
+	}
 
 }
