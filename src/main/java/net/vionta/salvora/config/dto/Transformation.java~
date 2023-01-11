@@ -23,6 +23,9 @@ public class Transformation {
     protected Boolean fileList;
     @XmlElement(name="transformation-steps", type = TransformationStep.class)
     protected List<TransformationStep> transformationSteps = new ArrayList<TransformationStep>();
+    @XmlElement(name="triggers", type = Trigger.class)
+    protected List<Trigger> triggers = new ArrayList<Trigger>();
+
     
     public String getName() {
         return name;
