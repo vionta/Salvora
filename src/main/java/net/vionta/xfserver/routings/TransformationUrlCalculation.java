@@ -1,5 +1,9 @@
 package net.vionta.xfserver.routings;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import net.vionta.salvora.config.dto.FileMapping;
 import net.vionta.salvora.config.dto.Transformation;
 
 /**
@@ -18,6 +22,8 @@ public class TransformationUrlCalculation {
 	 */
 	public static final String HTTPS_SCHEME= "http";
 	
+	private static Logger LOGGER = LoggerFactory.getLogger(TransformationUrlCalculation.class);
+	
 	/**
 	 * Calculates the Vert.x route path according to 
 	 * the Transformation.
@@ -31,19 +37,15 @@ public class TransformationUrlCalculation {
 			case Transformation.LOCAL_SOURCE_TYPE:
 				if(isSinglePath(transformation)) return "/"+transformation.getPath();
 				else return "/"+transformation.getBasePath()+"*";
-//				break;
-			case Transformation.LOCAL_NETWORK_SOURCE_TYPE :
+			case Transformation.LOCAL_DIRECTORY_LISTING :
 				if(isSinglePath(transformation)) return "/"+transformation.getPath();
 				else return "/"+transformation.getBasePath()+"*";
-//				break;
 			case Transformation.REMOTE_NETWORK_SOURCE_TYPE:
 				if(isSinglePath(transformation)) return "/"+transformation.getPath();
 				else return "/"+transformation.getBasePath()+"*";
-//				break;
 		     default: throw new IllegalArgumentException("Invalid transformation type value :"+transformation.getType());		
 		}
 	}
-
 	
 	/**
 	 * Calculates the path/Url that we'll need to use to 
@@ -60,13 +62,11 @@ public class TransformationUrlCalculation {
 				if(isSinglePath(transformation)) url = transformation.getUrl();
 				else url = convertInternalUrl(requestedPath, transformation);
 				break;
-			case Transformation.LOCAL_NETWORK_SOURCE_TYPE :
-				url = scheme+"://localhost:"+port+"/"+requestedPath;
+			case Transformation.LOCAL_DIRECTORY_LISTING:
+				url = transformation.getUrl();
 				break;
 			case Transformation.REMOTE_NETWORK_SOURCE_TYPE:
-//				if(isSinglePath(transformation)) return transformation.getPath();
-//				else return transformation.getBasePath()+"*";
-				break;
+				throw new IllegalArgumentException(" Not yet implemented :");		
 			//In case the type is not recognized we 
 			// inform of the error. 
 		     default: throw new IllegalArgumentException("Invalid transformation type value :"+transformation.getType());		
@@ -92,6 +92,21 @@ public class TransformationUrlCalculation {
 		}
 	}
 
+	/**
+	 * Converts a request call path to the internal definition of 
+	 * the transformation element in the configuration. Basically 
+	 * performs the substitution of the external naming pattern 
+	 * to the internal one.
+	 * 
+	 * @param requestedPath
+	 * @param transformation
+	 * @return
+	 */
+	public static String convertInternalUrl(String requestedPath, FileMapping fileMapping) {
+			return fileMapping.getBaseUrl() 
+					+ requestedPath.substring(fileMapping.getBasePath().length()+1);
+		
+	}
 
 	/**
 	 * Returns if the transformation points to 
@@ -113,5 +128,5 @@ public class TransformationUrlCalculation {
 		// the definition is mulifile
 		} else return false;
 	}
-	
+
 }
