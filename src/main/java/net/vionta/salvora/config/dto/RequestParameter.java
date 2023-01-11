@@ -13,8 +13,8 @@ public class RequestParameter {
 
     @XmlAttribute(name = "request-key")
     protected String requestKey;
-    @XmlAttribute(name = "xslt-param-name")
-    protected String xsltParamName;
+    @XmlAttribute(name = "transformation-param-name")
+    protected String transformationParamName;
 
 
     public String getRequestKey() {
@@ -25,12 +25,18 @@ public class RequestParameter {
         this.requestKey = value;
     }
 
-    public String getXsltParamName() {
-        return xsltParamName;
+    public String getTransformationParamName() {
+        return transformationParamName;
     }
 
-    public void setXsltParamName(String value) {
-        this.xsltParamName = value;
+    public void setTransformationParamName(String value) {
+        this.transformationParamName = value;
     }
 
+	@Override
+	public String toString() {
+		return "RequestParameter [requestKey=" + requestKey + ", transformationParamName=" + transformationParamName
+				+ "]";
+	}
+    
 }
