@@ -9,11 +9,11 @@ class TransformationTestBuilder {
 	static final String TEST_PATH= "form/subcarpeta/archivo.xml";
 	static final String TEST_URL  = "carpetainterna/subcarpeta/archivo.xml";
 	
-	protected static Transformation localNetworkTransformation() {
-		Transformation t = new Transformation();
-		t.setType(Transformation.LOCAL_NETWORK_SOURCE_TYPE);
-		return t;
-	}
+//	protected static Transformation localNetworkTransformation() {
+//		Transformation t = new Transformation();
+////		t.setType(Transformation.LOCAL_NETWORK_SOURCE_TYPE);
+//		return t;
+//	}
 	
 	protected static Transformation localTransformation() {
 		Transformation t = new Transformation();
@@ -39,9 +39,9 @@ class TransformationTestBuilder {
 		return t;
 	}
 	
-	protected static Transformation localSingleNetworkTransformation() {
-		return setSinglePath(localNetworkTransformation());
-	}
+//	protected static Transformation localSingleNetworkTransformation() {
+//		return setSinglePath(localNetworkTransformation());
+//	}
 	
 	protected static Transformation localSingleTransformation() {
 		return setSinglePath(localTransformation());
@@ -51,9 +51,9 @@ class TransformationTestBuilder {
 		return setSinglePath(remoteTransformation());
 	}
 
-	protected static Transformation localMultiNetworkTransformation() {
-		return setMultiPath(localNetworkTransformation());
-	}
+//	protected static Transformation localMultiNetworkTransformation() {
+//		return setMultiPath(localNetworkTransformation());
+//	}
 	
 	protected static Transformation localMultiTransformation() {
 		return setMultiPath(localTransformation());
