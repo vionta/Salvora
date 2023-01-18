@@ -76,10 +76,19 @@ public class DefaultFileManager   {
 					response.end(contents);
 
 			} catch (IOException e) {
-				logger.error("Writing to the response failed with cause");
-				logger.error(e.getMessage());
-				e.printStackTrace();
-				getLogger(DefaultFileManager.class).warn(e.getMessage());
+				logger.error("Deleting file failed with cause:");
+				logger.error(""+e.getCause());
+			}
+	}
+
+	public static void deleteFile(String convertInternalUrl) {
+		Logger logger = getLogger(DefaultFileManager.class);
+		Path filePath = FileSystems.getDefault().getPath(".", convertInternalUrl);
+			try {
+				Files.delete(filePath);
+			} catch (IOException e) {
+				logger.error("Deleting file failed with cause:");
+				logger.error(""+e.getCause());
 			}
 	}
 
