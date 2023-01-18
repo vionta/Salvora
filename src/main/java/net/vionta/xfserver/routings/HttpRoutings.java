@@ -46,7 +46,24 @@ public final class HttpRoutings {
 						LOGGER.warn("Post request failure with cause : " + e.getCause());
 						ErrorManager.notifyError(response, "Post request failure with cause : " + e.getMessage());
 					}
-				});			
+				});		
+		
+		router.route().path("/" + fileMapping.getBasePath() + "/*").method(HttpMethod.DELETE)
+		.handler(request -> {
+			LOGGER.info("Writting file  : " + request.normalisedPath());
+			HttpServerResponse response = request.response();
+			contentTypeHeader(response, request.request());
+			try {
+				TriggerChainProcces.beforeTriggers(fileMapping.getTriggers());
+				String convertInternalUrl = TransformationUrlCalculation.convertInternalUrl(request.normalisedPath(), fileMapping);
+				DefaultFileManager.deleteFile(convertInternalUrl);
+				close(response);
+				TriggerChainProcces.afterTriggers(fileMapping.getTriggers());
+				} catch (Exception e) {	
+					LOGGER.warn("Post request failure with cause : " + e.getCause());
+					ErrorManager.notifyError(response, "Post request failure with cause : " + e.getMessage());
+				}
+			});			
 	}
 
 	public static void routeGetMethod(Router router, FileMapping fileMapping) {
