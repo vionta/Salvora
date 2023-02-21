@@ -32,7 +32,7 @@ public class ObjectFactory {
      * Create an instance of {@link Transformation }
      * 
      */
-    public Transformation createTransformation() {
+    public NetworkPathConfiguration createTransformation() {
         return new Transformation();
     }
 
