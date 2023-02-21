@@ -69,7 +69,6 @@ public class DefaultFileManager   {
 				
 				while ((line = bufferedReader.readLine()) != null) {
 					logger.debug(line);
-//					response.write(line);
 					contents+=line;
 					contents+="\n";
 				}
