@@ -11,19 +11,26 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "file-mapping", propOrder = {
+@XmlType(name = "collection", propOrder = {
     "description", "triggers"
 })
-public class FileMapping {
+public class FileMapping implements NetworkPathConfiguration  {
 
     @XmlElement(required = false)
     protected String description;
     @XmlAttribute(name = "name", required = false)
     protected String name;
-    @XmlAttribute(name = "base-url", required = true)
-    protected String baseUrl;
+    @XmlAttribute(name = "base-internal-path", required = true)
+    protected String baseInternalPath;
     @XmlAttribute(name = "base-path", required = true)
     protected String basePath;
+    
+    @XmlAttribute(name = "internal-path")
+    protected String internalPath;
+    @XmlAttribute(name = "path")
+    protected String path;
+    
+    
     @XmlAttribute(name = "file-list")
     protected Boolean fileList = false;
     @XmlAttribute(name = "write-allowed")
@@ -90,13 +97,13 @@ public class FileMapping {
 		this.deleteAllowed = deleteAllowed;
 	}
 
-	public String getBaseUrl() {
-		if(baseUrl == null) return getBasePath();
-		else return baseUrl;
+	public String getBaseInternalPath() {
+		if(baseInternalPath == null) return getBasePath();
+		else return baseInternalPath;
 	}
 
-	public void setBaseUrl(String baseUrl) {
-		this.baseUrl = baseUrl;
+	public void setBaseInternalPath(String baseInternalPath) {
+		this.baseInternalPath = baseInternalPath;
 	}
 
 	public List<Trigger> getTriggers() {
@@ -111,11 +118,25 @@ public class FileMapping {
 		return writeAllowed;
 	}
 
-	@Override
-	public String toString() {
-		return "FileMapping [description=" + description + ", name=" + name + ", basePath=" + basePath + ", fileList="
-				+ fileList + ", writeAllowed=" + writeAllowed + "]";
+	public String getInternalPath() {
+		return internalPath;
 	}
 
-    
+	public void setInternalPath(String internalPath) {
+		this.internalPath = internalPath;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	@Override
+	public String getType() {
+		return LOCAL_SOURCE_TYPE;
+	}
+
 }
