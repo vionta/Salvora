@@ -9,7 +9,7 @@ import java.net.URL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.vionta.xfserver.ServerImpl;
+import net.vionta.salvora.server.ServerImpl;
 
 /**
  * Utility class to read content from network 
@@ -43,8 +43,7 @@ public final class NetworkFileReader {
 	
 	public static void main(String[] args) throws MalformedURLException, IOException {
 		URL url = new URL("http://localhost:8085/issues");
-		System.out.println(url);
-		System.out.println(NetworkFileReader.readNetworkUrlToString(url));
+		LOGGER.debug(NetworkFileReader.readNetworkUrlToString(url));
 	}
 
 }
