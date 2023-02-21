@@ -11,13 +11,15 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "request-parameter")
 public class RequestParameter {
 
-    @XmlAttribute(name = "request-key")
+    @XmlAttribute(name = "key")
     protected String requestKey;
     @XmlAttribute(name = "transformation-param-name")
     protected String transformationParamName;
 
+    @XmlAttribute(name = "default")
+    protected String defaultValue;
 
-    public String getRequestKey() {
+	public String getRequestKey() {
         return requestKey;
     }
 
@@ -32,6 +34,14 @@ public class RequestParameter {
     public void setTransformationParamName(String value) {
         this.transformationParamName = value;
     }
+
+	public String getDefaultValue() {
+		return defaultValue;
+	}
+
+	public void setDefaultValue(String defaultValue) {
+		this.defaultValue = defaultValue;
+	}
 
 	@Override
 	public String toString() {
