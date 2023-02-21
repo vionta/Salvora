@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.vionta.salvora.server.ServerImpl;
 import net.vionta.salvora.util.file.FolderList;
-import net.vionta.xfserver.ServerImpl;
 
 /**
  * Tests the folder list functionality.
