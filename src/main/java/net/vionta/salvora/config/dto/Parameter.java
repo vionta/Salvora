@@ -9,7 +9,7 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "parameter")
 public class Parameter {
 
-    @XmlAttribute(name = "name")
+    @XmlAttribute(name = "key")
     protected String name;
     @XmlAttribute(name = "value")
     protected String value;
