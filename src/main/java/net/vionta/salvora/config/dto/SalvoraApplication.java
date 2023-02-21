@@ -17,7 +17,7 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "salvora-application")
 public class SalvoraApplication {
 
-    @XmlElement(name = "file-mapping", type=FileMapping.class)
+    @XmlElement(name = "collection", type=FileMapping.class)
     protected List<FileMapping> fileMappings = new ArrayList<FileMapping>();
     @XmlElement(name = "transformation", type=Transformation.class)
     protected List<Transformation> transformations = new ArrayList<Transformation>();
