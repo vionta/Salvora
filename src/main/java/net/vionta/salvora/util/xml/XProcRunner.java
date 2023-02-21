@@ -104,22 +104,5 @@ public class XProcRunner {
 		}
 
 	}
-	
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		try {
-			Trigger t = new Trigger(); 
-			t.setName("zzz");
-//			t.setSource("C:/dev/ws/salvora-ws/repositorio/salvora/Salvora/src/test/resources/build-report.xpl");
-			t.setSource("file:///C:/dev/ws/salvora-ws/salvora-playground/issue-list/form/build-report.xpl");
-			t.setBefore(Boolean.FALSE);
-			run(t, "");
-			LOGGER.debug(".. Finalizado ");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 }
