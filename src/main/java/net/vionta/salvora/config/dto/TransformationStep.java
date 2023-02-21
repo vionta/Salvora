@@ -83,7 +83,7 @@ public class TransformationStep {
 	@Override
 	public String toString() {
 		return "TransformationStep [name=" + name + ", source=" + source + ", type=" + type + ", pathParameters="
-				+ pathParameters + ", requestParameters=" + requestParameters + "]";
+				+ pathParameters + ", requestParameters=" + requestParameters + ", parameters=" + parameters + "]";
 	}
-	
+
 }
