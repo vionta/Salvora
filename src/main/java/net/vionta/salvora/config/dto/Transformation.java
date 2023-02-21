@@ -11,7 +11,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "transformation")
-public class Transformation {
+public class Transformation implements NetworkPathConfiguration {
 
 	public static final String LOCAL_SOURCE_TYPE = "local_file";
 	public static final String LOCAL_DIRECTORY_LISTING= "directory_listing";
@@ -23,10 +23,10 @@ public class Transformation {
     protected String path;
     @XmlAttribute(name = "base-path")
     protected String basePath;
-    @XmlAttribute(name = "base-url")
-    protected String baseUrl;
-    @XmlAttribute(name = "url")
-    protected String url;
+    @XmlAttribute(name = "base-internal-path")
+    protected String baseInternalPath;
+    @XmlAttribute(name = "internal-path")
+    protected String internalPath;
     
     @XmlElement(name="step", type = TransformationStep.class)
     protected List<TransformationStep> transformationSteps = new ArrayList<TransformationStep>();
@@ -34,7 +34,8 @@ public class Transformation {
     @XmlElement(name="trigger", type = Trigger.class)
     protected List<Trigger> triggers = new ArrayList<Trigger>();
 
-    public String getPath() {
+    @Override
+	public String getPath() {
 		return path;
 	}
 
@@ -42,12 +43,13 @@ public class Transformation {
 		this.path = path;
 	}
 
-	public String getUrl() {
-		return url;
+	@Override
+	public String getInternalPath() {
+		return internalPath;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setInternalPath(String url) {
+		this.internalPath = url;
 	}
 
 	@XmlAttribute(name = "type")
@@ -71,7 +73,8 @@ public class Transformation {
         this.name = value;
     }
 
-    public String getBasePath() {
+    @Override
+	public String getBasePath() {
         return basePath;
     }
 
@@ -79,12 +82,13 @@ public class Transformation {
         this.basePath = value;
     }
 
-    public String getBaseUrl() {
-    	return (baseUrl == null) ? getBasePath() : baseUrl;
+    @Override
+	public String getBaseInternalPath() {
+    	return (baseInternalPath == null) ? getBasePath() : baseInternalPath;
     }
 
-    public void setBaseUrl(String value) {
-        this.baseUrl = value;
+    public void setBaseInternal(String value) {
+        this.baseInternalPath = value;
     }
 
     public String getType() {
@@ -105,10 +109,9 @@ public class Transformation {
 
 	@Override
 	public String toString() {
-		return "Transformation [name=" + name + ", path=" + path + ", basePath=" + basePath + ", baseUrl=" + baseUrl
-				+ ", url=" + url + ", transformationSteps=" + transformationSteps + ", triggers=" + triggers + ", type="
-				+ type + "]";
+		return "Transformation [name=" + name + ", path=" + path + ", basePath=" + basePath + ", baseInternalPath="
+				+ baseInternalPath + ", internalPath=" + internalPath + ", transformationSteps=" + transformationSteps
+				+ ", triggers=" + triggers + ", type=" + type + "]";
 	}
 
-	
 }
