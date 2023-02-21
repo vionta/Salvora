@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.vionta</groupId>
   <artifactId>salvora</artifactId>
-  <version>beta-0.9</version>
+  <version>beta-0.9.1</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -15,7 +15,7 @@
     <vertx.version>3.9.1</vertx.version>
     <junit-jupiter.version>5.4.0</junit-jupiter.version>
     
-    <main.class>net.vionta.xfserver.Salvora</main.class>
+    <main.class>net.vionta.salvora.server.Salvora</main.class>
     <main.verticle>net.vionta.xfserver.Salvora</main.verticle>
     <graalvm.version>20.1.0</graalvm.version>
   </properties>
