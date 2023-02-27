@@ -53,7 +53,6 @@ public final class HttpCommandLineRoutings {
 					LOGGER.info("Writting file  : " + request.normalisedPath());
 					try {
 						Response.contentTypeHeader(response, request.request());
-//						response.putHeader("content-type", ContentTypeResolver.resolvePath(request.request().path()));
 						DefaultFileManager.writeFile(request.normalisedPath(), request.getBodyAsString());
 						close(response);
 					} catch (IOException e) {
