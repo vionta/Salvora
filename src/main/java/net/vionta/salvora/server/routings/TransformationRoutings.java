@@ -18,6 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
+import com.sun.mail.iap.Response;
+
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
@@ -27,7 +29,6 @@ import net.vionta.salvora.config.dto.PathParameter;
 import net.vionta.salvora.config.dto.RequestParameter;
 import net.vionta.salvora.config.dto.Transformation;
 import net.vionta.salvora.config.dto.TransformationStep;
-import net.vionta.salvora.server.ServerImpl;
 import net.vionta.salvora.server.launch.Options;
 import net.vionta.salvora.server.response.error.ErrorManager;
 import net.vionta.salvora.server.routings.path.DefaultPathCalculator;
@@ -57,7 +58,7 @@ public class TransformationRoutings {
 	 */
 	public static void routeTransformation(Router router, Transformation transformation, Options options) {
 		LOGGER.info("Logging transformation " + transformation);
-		String vertxRoute = TransformationUrlCalculation.calculateVertxRoute(transformation);
+		String vertxRoute =  pathCalculator.calculateVertxPath(transformation); 
 		LOGGER.debug("Vertx Route : " + vertxRoute);
 		router.route().path(vertxRoute).method(HttpMethod.GET).handler(request -> {
 			HttpServerResponse response = request.response();
@@ -242,7 +243,7 @@ public class TransformationRoutings {
 					content = StringReplacementTransform.transformDocumentFromContent(content, parameters);
 				} else
 					throw new IllegalStateException("Transformation type not configured or non valid yet");
-				LOGGER.info("Content n :" + content);
+				LOGGER.info("Content n :" + net.vionta.salvora.server.response.Response.contentHint(content));
 			} while (it.hasNext());
 		return content;
 	}
