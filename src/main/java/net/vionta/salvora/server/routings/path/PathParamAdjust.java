@@ -22,7 +22,6 @@ public class PathParamAdjust {
 			LOGGER.debug(" replacing {} : {} -> {}", adjustedPath, paramName, pathParams.get(paramName));
 			adjustedPath = adjustedPath.replace(":"+paramName, pathParams.get(paramName));
 		}
-		//return updated path
 		return adjustedPath;
 	}
 
