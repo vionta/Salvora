@@ -2,6 +2,8 @@ package net.vionta.salvora.server.response;
 
 
 
+import java.io.UnsupportedEncodingException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +31,7 @@ public class Response {
 		close(response, 200);
 	}
 
-	public static final void writeContent(HttpServerResponse response, HttpServerRequest request, String content) {
+	public static final void writeContent(HttpServerResponse response, HttpServerRequest request, String content) throws UnsupportedEncodingException {
 		LOGGER.info("Writing Content: " + contentHint(content));		
 		contentHeaders(response, request, content);
 		response.write(content);
@@ -40,10 +42,8 @@ public class Response {
 		HttpServerResponse response = request.response();
 		contentTypeHeader(response, request.request());
 		LOGGER.info("Sending File: " + url);		
-		System.out.println("Sending File: " + url);		
 		response.sendFile(url);
 		LOGGER.info("File Sent: " + url);		
-//		close(response);
 	}
 	
 	
@@ -52,9 +52,11 @@ public class Response {
 	 * @param response
 	 * @param request
 	 * @param content
+	 * @throws UnsupportedEncodingException 
 	 */
-	public static final void contentHeaders(HttpServerResponse response, HttpServerRequest request, String content) {
-		response.putHeader("Content-length", Integer.toString(content.getBytes().length));
+	public static final void contentHeaders(HttpServerResponse response, HttpServerRequest request, String content) throws UnsupportedEncodingException {
+		LOGGER.debug("Content Lenght :  {} " , Integer.toString(content.getBytes("UTF-8").length));
+		response.putHeader("Content-length", Integer.toString(content.getBytes("UTF-8").length));
 		contentTypeHeader(response, request);
 	}
 	
