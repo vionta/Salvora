@@ -43,7 +43,6 @@ public class XProcRunner {
 			/* Create a new compiler */
 			LOGGER.debug(" Engine "+engine);
 			XProcCompiler compiler = engine.newXProcCompiler();			
-//			engine.getConfiguration().setXSLTConnector("com.xml_project.morganaxproc3.saxon10connector.Saxon10XSLTConnector");
 			/* Compile the pipeline */
 			XProcPipeline pipeline = compiler.compile(pipelineSource);
 			LOGGER.debug(" Pipeline "+pipeline);
