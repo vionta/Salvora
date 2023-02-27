@@ -67,11 +67,8 @@ public class DefaultPathCalculator implements IPathCalculator {
 			resultingPath = (calculatedBasePath != null ) ? 
 					calculatedBasePath+"/"+requesPathPart : requesPathPart ;
 		} else if(calculatedBasePath != null) {
-			// 
 			resultingPath = 
 					calculatedBasePath + "/" + individualRequestedPath;
-//							requestedPath.substring(calculatedBasePath.length(), 
-//									requestedPath.length());
 		} else throw new IllegalStateException("Configured Network Path element without Path or base path.Please review salvora cunfiguration.");
 
 		return "./"+resultingPath;
