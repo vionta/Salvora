@@ -11,7 +11,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "trigger")
-public class Trigger {
+public class Trigger  implements ParameterSetElement {
 
 	public static final String TRIGGER_TYPE_XPROC ="xproc";
 		
