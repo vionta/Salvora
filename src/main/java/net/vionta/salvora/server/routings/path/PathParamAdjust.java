@@ -30,13 +30,14 @@ public class PathParamAdjust {
 		LOGGER.debug(" Detecting parameter on {} ", path);
 		String pathRest = path.substring(path.indexOf(":")+1, path.length());
 		// look for the end of the parameter name
-		int nextSlashPosition = (pathRest.indexOf("/") >-1) ? pathRest.indexOf("/")  : pathRest.length()+1;
-		int nextDotPosition = (pathRest.indexOf(".") >-1) ? pathRest.indexOf(".")  : pathRest.length()+1;
+		int nextSlashPosition = (pathRest.indexOf("/") >-1) ? pathRest.indexOf("/")  +1: pathRest.length()+1;
+		int nextDotPosition = (pathRest.indexOf(".") >-1) ? pathRest.indexOf(".") +1 : pathRest.length()+1;
 		int paramEnd = (nextSlashPosition < nextDotPosition) ? nextSlashPosition : nextDotPosition;
 		//Return the parameter name
-		String paramName = pathRest.substring(0, paramEnd);
+		String paramName = pathRest.substring(0, paramEnd-1);
 		LOGGER.debug(" ParamName {} ", paramName);
 		return paramName;
 	}
 	
+
 }
