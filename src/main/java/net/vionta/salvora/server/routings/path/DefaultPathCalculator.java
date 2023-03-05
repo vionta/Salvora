@@ -26,21 +26,32 @@ public class DefaultPathCalculator implements IPathCalculator {
 	public String calculateInternalPath(NetworkPathConfiguration documentReference, String requestedPath,
 			Map<String, String> requestParameters) {
 		
-		LOGGER.debug(" Requested Path : "+requestedPath);
 		String resultingPath ; 
+
+		LOGGER.debug(" Requested Path : "+requestedPath);
+
 		
 		String calculatedBasePath = null ; 
 		String individualRequestedPath = null ; 
 		String requestedPathEnd ; 
 		
-		//The first step is to calculate the base path (if we have one, or two)
+		//The first step is to calculate the base path (if we have  one, or two)
 		String adjustedBasePath ;
 		if(documentReference.getBasePath()!=null) {
+
+			String adjustedRequestedPath = PathParamAdjust.adjustPath(
+					requestedPath, requestParameters);
+			LOGGER.debug(" Adjusted Requested Path : "+requestedPath);
+			
 			adjustedBasePath = PathParamAdjust.adjustPath(
-									documentReference.getBasePath()+1, requestParameters);
+									documentReference.getBasePath(), requestParameters);
+			
 			LOGGER.debug(" Adjusted Path : "+adjustedBasePath);
-			individualRequestedPath = requestedPath.substring(
-										adjustedBasePath.length(), requestedPath.length());
+			individualRequestedPath = adjustedRequestedPath.substring(
+										adjustedBasePath.length()+1, adjustedRequestedPath.length());
+			if(individualRequestedPath.startsWith("/")) individualRequestedPath = individualRequestedPath.substring(1);
+			LOGGER.debug(" Individual Requested Path : "+individualRequestedPath);
+			
 			  if(individualRequestedPath.indexOf("?") > -1)  individualRequestedPath = individualRequestedPath.substring(
 					0, individualRequestedPath.indexOf("?"));
 			  if(individualRequestedPath.indexOf("#") > -1)  individualRequestedPath = individualRequestedPath.substring(
@@ -81,4 +92,9 @@ public class DefaultPathCalculator implements IPathCalculator {
 
 	}
 
+	public static void main(String[] args) {
+		System.out.println("abcde".substring(0,"abcde".length()));
+		System.out.println("abcde".length());
+		System.out.println("abcde".substring(1,"abcde".length()));
+	}
 }
