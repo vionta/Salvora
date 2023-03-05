@@ -4,6 +4,7 @@ package net.vionta.xfserver.test.routes;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -91,4 +92,41 @@ class DefaultPathCalculatorTest {
 		assertEquals(expectedInternalPath, calculatedPath);
 	}
 	
+	@Test
+	void tesFragment1() {
+		FileMapping f = new FileMapping();
+		f.setBasePath("resources");
+		f.setBaseInternalPath("form/resources");
+		String calculatedPath = pc.calculateInternalPath(f, "resources/xsltforms/xsltforms.xsl", new HashMap<String, String>());
+		String expectedInternalPath = "./form/resources/xsltforms/xsltforms.xsl";
+		LOGGER.info("Expected :"+expectedInternalPath+" Calculated :"+calculatedPath);
+		assertEquals(expectedInternalPath, calculatedPath);
+	}
+
+	@Test
+	void tesDelete1() {
+		FileMapping f = new FileMapping();
+		f.setBasePath("collections/:entity");
+		f.setBaseInternalPath("data/:entity");
+		HashMap< String , String > params = new HashMap<String, String>();
+		params.put("entity", "issue");
+		String calculatedPath = pc.calculateInternalPath(f, "/collections/issue/yyyyyyyyyyyyy.xml", params);
+		String expectedInternalPath = "./data/issue/yyyyyyyyyyyyy.xml";
+		LOGGER.info("Expected :"+expectedInternalPath+" Calculated :"+calculatedPath);
+		assertEquals(expectedInternalPath, calculatedPath);
+	}
+
+	
+	@Test
+	void testStringStartsAndEnds()  {
+//			System.out.println(detectParamName("collections/:entity") );
+//			System.out.println(detectParamName("conf/index/:entity.html")) ;
+//		FileMapping f = new FileMapping();
+//		f.setBasePath("collections/:entity");
+//		f.setBaseInternalPath("data");
+//		String calculatedPath = pc.calculateInternalPath(f, "collections/:entity", {"entity", "issue"});
+//		String expectedInternalPath = "./data/";
+//		LOGGER.info("Expected :"+expectedInternalPath+" Calculated :"+calculatedPath);
+//		assertEquals(expectedInternalPath, calculatedPath);
+	}
 }
