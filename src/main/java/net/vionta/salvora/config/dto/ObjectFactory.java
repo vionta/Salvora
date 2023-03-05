@@ -40,7 +40,7 @@ public class ObjectFactory {
      * Create an instance of {@link TransformationStep }
      * 
      */
-    public TransformationStep createTransformationStep() {
+    public ParameterSetElement createTransformationStep() {
         return new TransformationStep();
     }
 
