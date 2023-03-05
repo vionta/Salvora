@@ -16,6 +16,7 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 import net.vionta.salvora.config.dto.FileMapping;
 import net.vionta.salvora.server.ServerImpl;
@@ -46,12 +47,12 @@ public final class HttpRoutings {
 			HttpServerResponse response = request.response();
 			contentTypeHeader(response, request.request());
 			try {
-				TriggerChainProcces.beforeTriggers(fileMapping.getTriggers());
+				TriggerChainProcces.beforeTriggers(fileMapping.getTriggers(), request);
 				String convertInternalUrl = pathCalculator.calculateInternalPath( fileMapping, request.normalisedPath(), request.pathParams());
 				LOGGER.info("File delete path :" + convertInternalUrl );
 				DefaultFileManager.deleteFile(convertInternalUrl);
 				close(response);
-				TriggerChainProcces.afterTriggers(fileMapping.getTriggers());
+				TriggerChainProcces.afterTriggers(fileMapping.getTriggers(), request);
 				} catch (Exception e) {	
 					LOGGER.warn("Post request failure with cause : " + e.getCause());
 					ErrorManager.notifyError(response, "Post request failure with cause : " + e.getMessage());
@@ -64,11 +65,11 @@ public final class HttpRoutings {
 				HttpServerResponse response = request.response();
 				contentTypeHeader(response, request.request());
 				try {
-					TriggerChainProcces.beforeTriggers(fileMapping.getTriggers());
+					TriggerChainProcces.beforeTriggers(fileMapping.getTriggers(), request);
 					String convertInternalUrl = pathCalculator.calculateInternalPath( fileMapping, request.normalisedPath(), request.pathParams());
 					DefaultFileManager.writeFile(convertInternalUrl, request.getBodyAsString());
 					close(response);
-					TriggerChainProcces.afterTriggers(fileMapping.getTriggers());
+					TriggerChainProcces.afterTriggers(fileMapping.getTriggers(), request);
 					} catch (IOException e) {
 						LOGGER.warn("Post request failure with cause : " + e.getCause());
 						ErrorManager.notifyError(response, "Post request failure with cause : " + e.getMessage());
@@ -85,9 +86,9 @@ public final class HttpRoutings {
 			LOGGER.info("Serving file  : " + request.normalisedPath());
 			String path = pathCalculator.calculateInternalPath(fileMapping, request.normalisedPath(), request.pathParams());
 			LOGGER.info("Internal Path: " + path);
-			TriggerChainProcces.beforeTriggers(fileMapping.getTriggers());
+			TriggerChainProcces.beforeTriggers(fileMapping.getTriggers(), request);
 			sendFile(request,  path);
-			TriggerChainProcces.afterTriggers(fileMapping.getTriggers());
+			TriggerChainProcces.afterTriggers(fileMapping.getTriggers(), request);
 			} catch (Exception e) {
 				LOGGER.error("Error returning fle", e);
 				ErrorManager.notifyError(request.response(), "Error returning fle");
