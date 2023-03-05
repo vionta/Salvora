@@ -61,4 +61,16 @@ class PathParamAdjustTest {
 		assertEquals(adjustedPath, targetPath);
 	}
 
+	
+	@Test
+	void testAdjustPathResources() {
+		String initialPath = "/resources/xsltforms/xsltforms.xsl";
+		String targetPath = "/form/resources/xsltforms/xsltforms.xsl";
+		LOGGER.debug("Testig {}", initialPath);
+		String adjustedPath = adjustPath(initialPath,defaultParameterMap);
+		LOGGER.debug("Adjusted Path {}",adjustedPath);
+		LOGGER.debug("Target Path {}",targetPath);
+		assertEquals(adjustedPath, targetPath);
+	}
+	
 }
