@@ -4,6 +4,8 @@ package net.vionta.salvora.util.xml;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 
@@ -19,25 +21,21 @@ import com.xml_project.morganaxproc3.XProcResult;
 import com.xml_project.morganaxproc3.XProcSource;
 import com.xml_project.morganaxproc3.documents.XProcDocument;
 
-import net.vionta.salvora.config.dto.Parameter;
 import net.vionta.salvora.config.dto.Trigger;
 
 public class XProcRunner {
 
 	static Logger LOGGER = LoggerFactory.getLogger(XProcRunner.class);
 
-	public static void run(Trigger trigger, String content) {
+	public static void run(Trigger trigger, String content, Map<String, String> parameters) {
 		
 		LOGGER.debug(" Running trigger "+trigger.getName());
 		/* Create a source with the pipeline */
-		//XProcSource pipelineSource = new XProcSource("file:///mypipelines/pipeline.xpl");
 		
 		try{
-			URI xprocUri = new URI(trigger.getSource());
-			File f = new File(xprocUri);
-			LOGGER.debug(" Uri "+xprocUri +" > "+f.exists());
+			URI xprocUri = loadXProcFilePath(trigger.getSource());
 			XProcSource pipelineSource = new XProcSource(xprocUri);
-			LOGGER.debug(" pipeline Source  "+xprocUri);
+//			LOGGER.debug(" pipeline Source  "+xprocUri);
 			/* Create an XProcEngine */
 			XProcEngine engine = XProcEngine.newXProc();	
 			/* Create a new compiler */
@@ -48,10 +46,16 @@ public class XProcRunner {
 			LOGGER.debug(" Pipeline "+pipeline);
 			
 			XProcInput input = new XProcInput(engine.getConfiguration());
-			for(Parameter parameter : trigger.getParameters()) {
-				LOGGER.debug(" Adding parameter "+parameter.getName());
-				input.setOption(new QName(parameter.getName()), parameter.getValue());
+//			for(Parameter parameter : trigger.getParameters()) {
+//				LOGGER.debug(" Adding parameter "+parameter.getName());
+//				input.setOption(new QName(parameter.getName()), parameter.getValue());
+//			}
+			
+			for(Entry<String, String> parameter : parameters.entrySet()) {
+				LOGGER.debug(" Adding parameter "+parameter.getKey()+" -> "+parameter.getValue());
+				input.setOption(new QName(parameter.getKey()), "'"+parameter.getValue()+"'");
 			}
+			
 			
 			/* Execute the pipeline */
 			XProcOutput output = pipeline.run(input);
@@ -104,4 +108,29 @@ public class XProcRunner {
 
 	}
 
+	private static URI loadXProcFilePath(String source) throws URISyntaxException {
+		if (calculateLocalFileAbsolutePath(source)==null) throw new IllegalStateException(" Trigger configuration is empty, no url was provided ");
+		URI xprocUri = new URI(calculateLocalFileAbsolutePath(source));
+		File f = new File(xprocUri);
+		if (!f.exists()) throw new IllegalStateException(" XProc file "+source+" not found");
+		return xprocUri;
+	}
+
+	private static String calculateLocalFileAbsolutePath(String source) {
+		System.out.println("Working Directory = " + System.getProperty("user.dir"));
+		String userDirectory = new File("").getAbsolutePath().replace("\\", "/");
+		System.out.println(" UD "+userDirectory);
+		String calculatedURL = "file:///"+userDirectory+"/"+source;
+		System.out.println(calculatedURL );
+		return calculatedURL;
+	}
+
+	
+//	public static void main(String[] args) {
+//		String testUrl = "hola.xpl";
+//		String expectedResult = "file:///C:/dev/ws/salvora-ws/salvora/Salvora/hola.xpl";
+//		System.out.println(" Response " +calculateLocalFileAbsolutePath(testUrl));
+//		System.out.println(" > " +calculateLocalFileAbsolutePath(testUrl).equals(expectedResult));
+//	}
+	
 }
