@@ -14,6 +14,7 @@ import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.apache.http.annotation.Obsolete;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -25,11 +26,13 @@ import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import net.vionta.salvora.config.dto.Parameter;
+import net.vionta.salvora.config.dto.ParameterSetElement;
 import net.vionta.salvora.config.dto.PathParameter;
 import net.vionta.salvora.config.dto.RequestParameter;
 import net.vionta.salvora.config.dto.Transformation;
 import net.vionta.salvora.config.dto.TransformationStep;
 import net.vionta.salvora.server.launch.Options;
+import net.vionta.salvora.server.request.ParameterCalculation;
 import net.vionta.salvora.server.response.error.ErrorManager;
 import net.vionta.salvora.server.routings.path.DefaultPathCalculator;
 import net.vionta.salvora.server.routings.path.IPathCalculator;
@@ -64,7 +67,7 @@ public class TransformationRoutings {
 			HttpServerResponse response = request.response();
 			LOGGER.debug("Logging transformation " + transformation);
 			try {
-				TriggerChainProcces.beforeTriggers(transformation.getTriggers());
+				TriggerChainProcces.beforeTriggers(transformation.getTriggers(), request);
 				if (Transformation.LOCAL_SOURCE_TYPE.equals(transformation.getType())) {
 					localSourceRoute(transformation, request, response);
 				} else if (Transformation.REMOTE_NETWORK_SOURCE_TYPE.equals(transformation.getType())) {
@@ -72,7 +75,7 @@ public class TransformationRoutings {
 				} else if (Transformation.LOCAL_DIRECTORY_LISTING.equals(transformation.getType())) {
 					LocalDirectoryMapping(transformation, options, request, response);
 				}
-				TriggerChainProcces.afterTriggers(transformation.getTriggers());
+				TriggerChainProcces.afterTriggers(transformation.getTriggers(), request);
 			} catch (TransformerException | SAXException | IOException | ParserConfigurationException e) {
 				LOGGER.warn("Error while performing transformation : ", e.getMessage());
 				ErrorManager.notifyError(response,
@@ -93,7 +96,7 @@ public class TransformationRoutings {
 			TransformationStep step = it.next();
 			LOGGER.debug("Step 2 : " + step.getName() + " - " + step.getType());
 			String content;
-			Map<String, String> parameters = buildTransformationParameterMap(step, request);
+			Map<String, String> parameters = ParameterCalculation.buildTransformationParameterMap(step, request);
 			LOGGER.debug("Step 2" + request.normalisedPath() + " " + step.getType());
 			LOGGER.debug(" - " + transformation.getBasePath());
 			LOGGER.debug(" - " + transformation.getBaseInternalPath());
@@ -151,14 +154,15 @@ public class TransformationRoutings {
 		writeContent(response, request.request(), content);
 	}
 
-	/**x
+	/**
 	 * Prepares the list of parameters from the step.
 	 * 
 	 * @param step
 	 * @param request
 	 * @return The list of parameters for the Xslt Transformation
 	 */
-	private static Map<String, String> buildTransformationParameterMap(TransformationStep step,
+	@Deprecated
+	private static Map<String, String> buildTransformationParameterMap(ParameterSetElement step,
 			RoutingContext request) {
 		Map<String, String> transformationParameters = new Hashtable<String, String>();
 		// Handle list of path Parameters
@@ -236,7 +240,7 @@ public class TransformationRoutings {
 		if (it.hasNext())
 			do {
 				step = it.next();
-				Map<String, String> parameters = buildTransformationParameterMap(step, request);
+				Map<String, String> parameters = ParameterCalculation.buildTransformationParameterMap(step, request);
 				if (step.TRANSFORMATION_TYPE_XSLT.equals(step.getType())) {
 					content = XsltTransform.transformDocumentFromContent(content, step.getSource(), parameters);
 				} else if (TransformationStep.TRANSFORMATION_TYPE_STRING.equals(step.getType())) {
