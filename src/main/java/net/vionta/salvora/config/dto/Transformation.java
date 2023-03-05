@@ -109,9 +109,18 @@ public class Transformation implements NetworkPathConfiguration {
 
 	@Override
 	public String toString() {
-		return "Transformation [name=" + name + ", path=" + path + ", basePath=" + basePath + ", baseInternalPath="
-				+ baseInternalPath + ", internalPath=" + internalPath + ", transformationSteps=" + transformationSteps
-				+ ", triggers=" + triggers + ", type=" + type + "]";
+		StringBuilder rep = new StringBuilder("Transformation ");
+		if(name!=null) rep.append(name);
+		rep.append(" : ");
+		if(basePath!=null) rep.append(basePath);
+		if(path!=null) rep.append(" " ).append(path);
+		rep.append(" -> ");
+		if(baseInternalPath!=null) rep.append(baseInternalPath);
+		if(internalPath!=null) rep.append(" " ).append(internalPath);
+		rep.append("\n");
+		rep.append(" Steps :").append(transformationSteps.size());
+		rep.append(" Triggers :").append(triggers.size());
+		return rep.toString();
 	}
 
 }
