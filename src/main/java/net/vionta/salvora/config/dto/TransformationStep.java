@@ -11,7 +11,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "step")
-public class TransformationStep {
+public class TransformationStep implements ParameterSetElement {
 
 	public static final String TRANSFORMATION_TYPE_XSLT ="xslt";
 	public static final String TRANSFORMATION_TYPE_XQUERY ="xquery";
@@ -56,6 +56,7 @@ public class TransformationStep {
         this.type = value;
     }
 
+	@Override
 	public List<PathParameter> getPathParameters() {
 		return pathParameters;
 	}
@@ -64,6 +65,7 @@ public class TransformationStep {
 		this.pathParameters = pathParameters;
 	}
 
+	@Override
 	public List<RequestParameter> getRequestParameters() {
 		return requestParameters;
 	}
@@ -72,6 +74,7 @@ public class TransformationStep {
 		this.requestParameters = requestParameters;
 	}
 
+	@Override
 	public List<Parameter> getParameters() {
 		return parameters;
 	}
