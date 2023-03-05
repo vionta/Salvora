@@ -139,4 +139,16 @@ public class FileMapping implements NetworkPathConfiguration  {
 		return LOCAL_SOURCE_TYPE;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder mappingSerialization = new StringBuilder("Collection ");
+		if(name!=null) mappingSerialization.append(name).append(" : ");
+		if(basePath!=null) mappingSerialization.append(" |  Base Path ").append(basePath).append(" -> ").append(baseInternalPath);
+		if(path!=null) mappingSerialization.append(" | Path ").append(path).append(" -> ").append(internalPath);
+		if(triggers!=null ) mappingSerialization.append(" \n trigger count(").append(triggers.size()).append(")")	;
+		return mappingSerialization.toString();
+	}
+
+	
+	
 }
