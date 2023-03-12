@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.vionta</groupId>
   <artifactId>salvora</artifactId>
-  <version>beta-0.9.3</version>
+  <version>beta-0.9.9</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -77,13 +77,45 @@
       <version>1.1.1</version>
     </dependency>
     
-    <!-- https://mvnrepository.com/artifact/org.glassfish.jaxb/jaxb-runtime -->
+    
+    <!--  intento jdk last -->
+    <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
+    <!-- 
+<dependency>
+    <groupId>javax.xml.bind</groupId>
+    <artifactId>jaxb-api</artifactId>
+    <version>2.4.0-b180830.0359</version>
+</dependency>
+    
+    
+<dependency>
+    <groupId>com.sun.xml.bind</groupId>
+    <artifactId>jaxb-ri</artifactId>
+    <version>4.0.1</version>
+    <type>pom</type>
+</dependency>
+     -->
 
+	<dependency>
+    	<groupId>jakarta.xml.bind</groupId>
+    	<artifactId>jakarta.xml.bind-api</artifactId>
+   		<version>4.0.0</version>
+     </dependency>
+     
+     <dependency>
+     	<groupId>com.sun.xml.bind</groupId>
+        <artifactId>jaxb-impl</artifactId>
+        <version>4.0.2</version>
+      </dependency>
+        
+    <!-- https://mvnrepository.com/artifact/org.glassfish.jaxb/jaxb-runtime -->
+<!--  Funciona en JDK = 11
     <dependency>
       <groupId>org.glassfish.jaxb</groupId>
       <artifactId>jaxb-runtime</artifactId>
       <version>3.0.1</version>
     </dependency>
+ -->
 
     <!-- https://mvnrepository.com/artifact/org.eclipse.persistence/org.eclipse.persistence.moxy -->
     <dependency>
