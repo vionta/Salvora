@@ -46,6 +46,8 @@ public class ParameterCalculation {
 			if (queryParam != null && !queryParam.isEmpty()) {
 				String queryParamValue = queryParam.get(0);
 				transformationParameters.put(param.getTransformationParamName(), queryParamValue);
+			} else if(param.getDefaultValue()!=null) {
+				transformationParameters.put(param.getTransformationParamName(), param.getDefaultValue());
 			}
 		}
 			
