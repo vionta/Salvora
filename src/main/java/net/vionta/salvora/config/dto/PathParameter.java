@@ -38,7 +38,8 @@ public class PathParameter {
     protected String transformationParamName;
     @XmlAttribute(name = "default")
     protected String defaultValue;
-
+    @XmlAttribute(name = "input-port")
+    protected Boolean inputPort = Boolean.FALSE;
 
 	/**
      * Obtiene el valor de la propiedad requestKey.
@@ -96,9 +97,16 @@ public class PathParameter {
 		this.defaultValue = defaultValue;
 	}
 
+	public Boolean getInputPort() {
+		return inputPort;
+	}
+	public void setInputPort(Boolean inputPort) {
+		this.inputPort = inputPort;
+	}
+	
 	@Override
 	public String toString() {
-		return "PathParameter [requestKey=" + requestKey + ", transformationParamName=" + transformationParamName + "]";
+		return "PathParameter [requestKey=" + requestKey + ", transformationParamName=" + transformationParamName + ", input-port="+ inputPort+ "]";
 	}
 
 }
