@@ -27,7 +27,7 @@ public class TriggerChainProcces {
 	private static void runTrigger(Trigger trigger, RoutingContext request) {
 		try {
 			LOGGER.info("running trigger () " + trigger.getName());
-			XProcRunner.run(trigger, "", ParameterCalculation.buildTransformationParameterMap(trigger, request));
+			XProcRunner.run(trigger, "", ParameterCalculation.buildTransformationParameterList(trigger, request));
 		} catch (Exception e) {
 			LOGGER.error("Failure runnign trigger "+trigger.getName()+" due to ()"+e.getCause());
 			e.printStackTrace();
