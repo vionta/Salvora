@@ -31,7 +31,8 @@ public class DefaultFileManager   {
 	 * @return
 	 */
 	public static boolean fileExists(String path) {
-		getLogger(DefaultFileManager.class).info(new File(".").getAbsolutePath());
+		getLogger(DefaultFileManager.class).debug("Current Path: "+ new File(".").getAbsolutePath());
+		getLogger(DefaultFileManager.class).debug("Reqested Path: "+ "./" +path );
 		return new File("./" +path ).exists();
 	}
 
