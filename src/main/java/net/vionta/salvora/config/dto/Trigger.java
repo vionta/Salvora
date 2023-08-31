@@ -14,6 +14,9 @@ import jakarta.xml.bind.annotation.XmlType;
 public class Trigger  implements ParameterSetElement {
 
 	public static final String TRIGGER_TYPE_XPROC ="xproc";
+	public static final String TRIGGER_CONTENT_NONE ="none";
+	public static final String TRIGGER_CONTENT_USE_REQUEST ="request";
+	public static final String TRIGGER_CONTENT_USE_CHAIN ="chain";
 		
     @XmlAttribute(name = "name")
     protected String name;
@@ -24,6 +27,17 @@ public class Trigger  implements ParameterSetElement {
     
     @XmlAttribute(name = "before")
     protected Boolean before = Boolean.FALSE;
+    
+    
+    /**
+     * An attribute to indicate if the trigger should receive 
+     * direct content. Possible values are:
+     * - none (default).
+     * - request (http request contents.
+     * - chain the output of the previous step in the chain.
+     */
+    @XmlAttribute(name = "content")
+    protected String content = TRIGGER_CONTENT_NONE ;
     
     @XmlAttribute(name = "type", required = true)
     protected String type = TRIGGER_TYPE_XPROC; 
@@ -43,7 +57,8 @@ public class Trigger  implements ParameterSetElement {
 	public void setBefore(Boolean before) { this.before = before; }
 	public String getType() {	return type; 	}
 	public void setType(String type) {	this.type = type;	}
-	
+	public String getContent() { return content; }
+	public void setContent(String content) { this.content = content; }
 	public String getInput() {	return input;	}
 	public void setInput(String input) {	this.input = input;	}
 	public List<PathParameter> getPathParameters() {	return pathParameters;		}
