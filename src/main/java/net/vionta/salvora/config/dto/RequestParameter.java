@@ -18,6 +18,8 @@ public class RequestParameter {
 
     @XmlAttribute(name = "default")
     protected String defaultValue;
+    @XmlAttribute(name = "input-port")
+    protected Boolean inputPort = Boolean.FALSE;
 
 	public String getRequestKey() {
         return requestKey;
@@ -43,10 +45,18 @@ public class RequestParameter {
 		this.defaultValue = defaultValue;
 	}
 
+	public Boolean getInputPort() {
+		return inputPort;
+	}
+	public void setInputPort(Boolean inputPort) {
+		this.inputPort = inputPort;
+	}
+	
+	
 	@Override
 	public String toString() {
 		return "RequestParameter [requestKey=" + requestKey + ", transformationParamName=" + transformationParamName
-				+ ", defaultValue=" + defaultValue + "]";
+				+ ", defaultValue=" + defaultValue + ", input-port="+ inputPort+ "]"; 
 	}
 
 }
