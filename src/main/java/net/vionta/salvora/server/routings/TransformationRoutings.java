@@ -19,8 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-import com.sun.mail.iap.Response;
-
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
@@ -74,7 +72,8 @@ public class TransformationRoutings {
 					RemoteNetworkSource(transformation, options, request, response);
 				} else if (Transformation.LOCAL_DIRECTORY_LISTING.equals(transformation.getType())) {
 					LocalDirectoryMapping(transformation, options, request, response);
-				}
+				} else if (Transformation.LOCAL_NETWORK_SOURCE_TYPE.equals(transformation.getType())) 
+					LocalNetworkSource(transformation, options, request, response);
 				TriggerChainProcces.afterTriggers(transformation.getTriggers(), request);
 			} catch (TransformerException | SAXException | IOException | ParserConfigurationException e) {
 				LOGGER.warn("Error while performing transformation : ", e.getMessage());
@@ -147,6 +146,27 @@ public class TransformationRoutings {
 		URL initialContentUrl = new URL(calculateCallUrl);
 		LOGGER.debug("Initial URL  (1) " + initialContentUrl);
 
+		String initialContent = NetworkFileReader.readNetworkUrlToString(initialContentUrl);
+		LOGGER.debug("Content : " + initialContent);
+		String content = chainTransformations(transformation.getTransformationSteps(), initialContent, request);
+		LOGGER.debug("Content : " + content);
+		writeContent(response, request.request(), content);
+	}
+
+	private static void LocalNetworkSource(Transformation transformation, Options options, RoutingContext request,
+			HttpServerResponse response) throws MalformedURLException, IOException, TransformerException, SAXException,
+	ParserConfigurationException {
+		
+		LOGGER.info("Transforming " + transformation.getName() + " | " + transformation.getPath() + " -> "
+				+ transformation.getInternalPath());
+		String calculateCallUrl  = pathCalculator.calculateInternalNetworkPath(
+				transformation, request.normalisedPath(), 
+				String.valueOf(options.getPort()), TransformationUrlCalculation.HTTP_SCHEME, 
+				request.pathParams());
+		LOGGER.debug("Call URL  (1) " + calculateCallUrl);
+		URL initialContentUrl = new URL(calculateCallUrl);
+		LOGGER.debug("Initial URL  (1) " + initialContentUrl);
+		
 		String initialContent = NetworkFileReader.readNetworkUrlToString(initialContentUrl);
 		LOGGER.debug("Content : " + initialContent);
 		String content = chainTransformations(transformation.getTransformationSteps(), initialContent, request);
