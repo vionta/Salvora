@@ -7,12 +7,15 @@ import jakarta.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "parameter")
-public class Parameter {
+public class Parameter implements TransformationParameter {
 
     @XmlAttribute(name = "key")
     protected String name;
     @XmlAttribute(name = "value")
     protected String value;
+    @XmlAttribute(name = "input-port")
+    protected Boolean inputPort = Boolean.FALSE;
+    
 	public String getName() {
 		return name;
 	}
@@ -25,9 +28,16 @@ public class Parameter {
 	public void setValue(String value) {
 		this.value = value;
 	}
+	
+	public Boolean getInputPort() {
+		return inputPort;
+	}
+	public void setInputPort(Boolean inputPort) {
+		this.inputPort = inputPort;
+	}
 	@Override
 	public String toString() {
-		return "Parameter [name=" + name + ", value=" + value + "]";
+		return "Parameter [name=" + name + ", value=" + value + ", input-port"+ inputPort+ "]";
 	}
 
 }
