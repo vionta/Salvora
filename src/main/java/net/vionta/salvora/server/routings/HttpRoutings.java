@@ -7,6 +7,7 @@ import static net.vionta.salvora.server.response.Response.contentTypeHeader;
 import static net.vionta.salvora.server.response.Response.sendFile;
 import static net.vionta.salvora.server.response.Response.writeContent;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.slf4j.Logger;
@@ -86,9 +87,14 @@ public final class HttpRoutings {
 			LOGGER.info("Serving file  : " + request.normalisedPath());
 			String path = pathCalculator.calculateInternalPath(fileMapping, request.normalisedPath(), request.pathParams());
 			LOGGER.info("Internal Path: " + path);
-			TriggerChainProcces.beforeTriggers(fileMapping.getTriggers(), request);
-			sendFile(request,  path);
-			TriggerChainProcces.afterTriggers(fileMapping.getTriggers(), request);
+				if(DefaultFileManager.fileExists(path)) {	
+					
+					TriggerChainProcces.beforeTriggers(fileMapping.getTriggers(), request);
+					sendFile(request, path);
+					TriggerChainProcces.afterTriggers(fileMapping.getTriggers(), request);
+				} else {
+					ErrorManager.notifyError(request.response(), "File not found", 404);				
+				}
 			} catch (Exception e) {
 				LOGGER.error("Error returning fle", e);
 				ErrorManager.notifyError(request.response(), "Error returning fle");
