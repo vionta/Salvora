@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.vionta</groupId>
   <artifactId>salvora</artifactId>
-  <version>beta-0.9.9</version>
+  <version>0.101.0</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -56,8 +56,7 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- <dependency> <groupId>org.slf4j</groupId> <artifactId>slf4j-log4j12</artifactId> 
-	 <version>1.7.26</version> </dependency> -->
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
@@ -77,47 +76,19 @@
       <version>1.1.1</version>
     </dependency>
     
-    
-    <!--  intento jdk last -->
-    <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
-    <!-- 
-<dependency>
-    <groupId>javax.xml.bind</groupId>
-    <artifactId>jaxb-api</artifactId>
-    <version>2.4.0-b180830.0359</version>
-</dependency>
-    
-    
-<dependency>
-    <groupId>com.sun.xml.bind</groupId>
-    <artifactId>jaxb-ri</artifactId>
-    <version>4.0.1</version>
-    <type>pom</type>
-</dependency>
-     -->
-
-	<dependency>
-    	<groupId>jakarta.xml.bind</groupId>
-    	<artifactId>jakarta.xml.bind-api</artifactId>
-   		<version>4.0.0</version>
-     </dependency>
-     
-     <dependency>
-     	<groupId>com.sun.xml.bind</groupId>
-        <artifactId>jaxb-impl</artifactId>
-        <version>4.0.2</version>
-      </dependency>
-        
-    <!-- https://mvnrepository.com/artifact/org.glassfish.jaxb/jaxb-runtime -->
-<!--  Funciona en JDK = 11
     <dependency>
-      <groupId>org.glassfish.jaxb</groupId>
-      <artifactId>jaxb-runtime</artifactId>
-      <version>3.0.1</version>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+      <version>4.0.0</version>
     </dependency>
- -->
+    
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-impl</artifactId>
+      <version>4.0.2</version>
+    </dependency>
+    
 
-    <!-- https://mvnrepository.com/artifact/org.eclipse.persistence/org.eclipse.persistence.moxy -->
     <dependency>
       <groupId>org.eclipse.persistence</groupId>
       <artifactId>org.eclipse.persistence.moxy</artifactId>
@@ -127,38 +98,86 @@
     <!--  Saxon HE Xslt compilerx -->				
     <!-- https://mvnrepository.com/artifact/net.sf.saxon/Saxon-HE -->
     <!--
-    <dependency>
-      <groupId>net.sf.saxon</groupId>
-      <artifactId>Saxon-HE</artifactId>
-      <version>9.9.1-8</version>
-    </dependency>
+	<dependency>
+	<groupId>net.sf.saxon</groupId>
+	<artifactId>Saxon-HE</artifactId>
+	<version>9.9.1-8</version>
+	</dependency>
     -->
     <!-- https://mvnrepository.com/artifact/net.sf.saxon/Saxon-HE -->
     <dependency>
       <groupId>net.sf.saxon</groupId>
       <artifactId>Saxon-HE</artifactId>
-      <version>10.3</version>
+      <version>10.8</version>
     </dependency>
     
 
     <!--
-maven-install-jar-help MorganaXProc com.xml_project.morganaxproc3 0.9.17-beta MorganaXProc-IIIse.jar
+	maven-install-jar-help MorganaXProc com.xml_project.morganaxproc3 1.1.5 MorganaXProc-IIIse.jar
+
+ 
     -->
-    <dependency>
+
+<dependency>
       <groupId>com.xml_project.morganaxproc3</groupId>
       <artifactId>MorganaXProc</artifactId>
-      <version>0.9.17-beta</version>
+      <version>1.1.5</version>
+    </dependency>
+
+
+    <!--
+	Morgana Updates
+https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+
+    -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.12.0</version>
     </dependency>
 
 
 
+    <!-- https://mvnrepository.com/artifact/nu.validator/htmlparser -->
+<dependency>
+    <groupId>nu.validator</groupId>
+    <artifactId>htmlparser</artifactId>
+    <version>1.4.15</version>
+</dependency>
+
+    
+<!-- https://mvnrepository.com/artifact/jline/jline -->
+<dependency>
+    <groupId>jline</groupId>
+    <artifactId>jline</artifactId>
+    <version>2.14.6</version>
+</dependency>
+
+
+<!-- https://mvnrepository.com/artifact/com.networknt/json-schema-validator -->
+<dependency>
+    <groupId>com.networknt</groupId>
+    <artifactId>json-schema-validator</artifactId>
+    <version>1.0.79</version>
+</dependency>
+
+
+<!--
+The current verison uses 1.33 but it has some vulnerability
+https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
+<dependency>
+    <groupId>org.yaml</groupId>
+    <artifactId>snakeyaml</artifactId>
+    <version>2.0</version>
+</dependency>
+
+
+    <!-- ....... Morgana dependencies ........... -->
     <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
       <version>1.11</version>
     </dependency>
-
-
 
     <dependency>
       <groupId>commons-logging</groupId>
@@ -166,21 +185,17 @@ maven-install-jar-help MorganaXProc com.xml_project.morganaxproc3 0.9.17-beta Mo
       <version>1.2</version>
     </dependency>
 
-
     <dependency>
       <groupId>nu.validator.htmlparser</groupId>
       <artifactId>htmlparser</artifactId>
       <version>1.4</version>
     </dependency>
 
-
-
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
       <version>4.5.10</version>
     </dependency>
-
 
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
@@ -194,12 +209,13 @@ maven-install-jar-help MorganaXProc com.xml_project.morganaxproc3 0.9.17-beta Mo
       <version>4.5.10</version>
     </dependency>
 
+    <!-- (Not) Removed from dependencies  -->
     <dependency>
       <groupId>com.sun.mail</groupId>
       <artifactId>javax.mail</artifactId>
       <version>1.6.2</version>
     </dependency>
-
+    
     <dependency>
       <groupId>org.relaxng</groupId>
       <artifactId>jing</artifactId>
@@ -224,22 +240,27 @@ maven-install-jar-help MorganaXProc com.xml_project.morganaxproc3 0.9.17-beta Mo
       <version>1.2.0</version>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/com.sun.activation/javax.activation
-	 https://mvnrepository.com/artifact/com.sun.activation/javax.activation 
-	 maven-install-jar Saxon99Connector  com.xml_project.morganaxproc3 1.0 Saxon99Connector.jar
+    <!--
+	maven-install-jar Saxon99Connector com.xml_project.morganaxproc3 1.0 Saxon99Connector.jar
     -->
-
     <dependency>
       <groupId>com.xml_project.morganaxproc3</groupId>
       <artifactId>Saxon99Connector</artifactId>
       <version>1.0</version>
-    </dependency>
+</dependency>
+    
 
     <dependency>
       <groupId>com.xml_project.morganaxproc3</groupId>
       <artifactId>Saxon10Connector</artifactId>
       <version>1.0</version>
     </dependency>
+
+    <!--
+
+Saxon 11 ,12 , etc
+
+-->
 
     <dependency>
       <groupId>org.xmlresolver</groupId>
@@ -259,25 +280,6 @@ maven-install-jar-help MorganaXProc com.xml_project.morganaxproc3 0.9.17-beta Mo
       <version>0.7.9</version>
     </dependency>
 
-    
-
-    
-    <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
-    <!-- 			<dependency> -->
-    <!-- 			    <groupId>javax.xml.bind</groupId> -->
-    <!-- 			    <artifactId>jaxb-api</artifactId> -->
-    <!-- 			    <version>2.4.0-b180830.0359</version> -->
-    <!-- 			</dependency> -->
-
-    <!-- https://mvnrepository.com/artifact/org.glassfish.jaxb/jaxb-runtime -->
-    <!-- 			<dependency> -->
-    <!-- 			    <groupId>org.glassfish.jaxb</groupId> -->
-    <!-- 			    <artifactId>jaxb-runtime</artifactId> -->
-    <!-- 			    <version>4.0.1</version> -->
-    <!-- 			</dependency> -->
-
-    <!-- <dependency> <groupId>org.graalvm.sdk</groupId> <artifactId>graal-sdk</artifactId> 
-	 <version>${graalvm.version}</version> <scope>provided</scope> </dependency> -->
   </dependencies>
   <build>
     <plugins>
@@ -285,9 +287,6 @@ maven-install-jar-help MorganaXProc com.xml_project.morganaxproc3 0.9.17-beta Mo
 	<artifactId>maven-compiler-plugin</artifactId>
 	<version>${maven-compiler-plugin.version}</version>
 	<configuration>
-	  <!--
-	      <release>8</release>
-	  -->
 	  <source>1.8</source>
 	  <target>1.8</target>
 	</configuration>
@@ -314,24 +313,6 @@ maven-install-jar-help MorganaXProc com.xml_project.morganaxproc3 0.9.17-beta Mo
 	      <goal>shade</goal>
 	    </goals>
 	    <configuration>
-	      <!-- Vert.x
-		   <transformers>
-		   <transformer
-		   implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-		   <manifestEntries>
-		   <Main-Class>io.vertx.core.Launcher</Main-Class>
-		   <Main-Verticle>${main.verticle}</Main-Verticle>
-		   </manifestEntries>
-		   </transformer>
-		   <transformer
-		   implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-		   <resource>META-INF/services/io.vertx.core.spi.VerticleFactory
-		   </resource>
-		   </transformer>
-		   </transformers>
-		   <artifactSet>
-		   </artifactSet>
-	      -->
 	      <outputFile>${project.build.directory}/${project.artifactId}-${project.version}-fat.jar
 	      </outputFile>
 	    </configuration>
@@ -354,58 +335,6 @@ maven-install-jar-help MorganaXProc com.xml_project.morganaxproc3 0.9.17-beta Mo
 	<artifactId>maven-surefire-plugin</artifactId>
 	<version>${maven-surefire-plugin.version}</version>
       </plugin>
-      <!-- Vert.x
-	   <plugin>
-	   <groupId>org.codehaus.mojo</groupId>
-	   <artifactId>exec-maven-plugin</artifactId>
-	   <version>${exec-maven-plugin.version}</version>
-	   <configuration>
-	   <mainClass>io.vertx.core.Launcher</mainClass>
-	   <arguments>
-	   <argument>run</argument>
-	   <argument>${main.verticle}</argument>
-	   </arguments>
-	   </configuration>
-	   </plugin>
-      -->
-      <!-- <plugin> <groupId>com.oracle.substratevm</groupId> <artifactId>native-image-maven-plugin</artifactId> 
-	   <version>1.0.0-rc14</version> <! - - <configuration> <mainClass>net.vionta.xfserver.XFServer</mainClass> 
-	   <buildArgs>-ea</buildArgs> </configuration> - - > <executions> <execution> 
-	   <goals> <goal>native-image</goal> </goals> <phase>package</phase> </execution> 
-	   </executions> </plugin> -->
-      <!-- <plugin> <groupId>org.graalvm.nativeimage</groupId> <artifactId>native-image-maven-plugin</artifactId> 
-	   <version>${graalvm.version}</version> <executions> <execution> <goals> <goal>native-image</goal> 
-	   </goals> <phase>package</phase> </execution> </executions> <configuration> 
-	   <skip>false</skip> <imageName>example</imageName> <buildArgs> - - no-fallback 
-	   </buildArgs> </configuration> </plugin> -->
-      
-      <!-- 
-	   <plugin>
-	   <groupId>org.codehaus.mojo</groupId>
-	   <artifactId>jaxb2-maven-plugin</artifactId>
-	   <version>3.1.0</version>
-	   <executions>
-           <execution>
-           <id>xjc</id>
-           <goals>
-           <goal>xjc</goal>
-           </goals>
-           </execution>
-	   </executions>
-	   <configuration>
-    	   
-           <packageName>net.vionta.salvora.mapping</packageName>	
-           <sources>
-           <source>src/main/resources/document-mapping.xsd</source>
-           </sources>
-           <outputDirectory>src/main/java</outputDirectory>
-           <clearOutputDir>false</clearOutputDir>
-	   </configuration>
-	   </plugin>
-      -->
-
     </plugins>
   </build>
-
-
 </project>
