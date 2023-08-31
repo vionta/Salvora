@@ -24,6 +24,7 @@ public class Response {
 
 	public static final void close(HttpServerResponse response, int code) {
 		response.setStatusCode(code);
+		response.close();
 		response.end();
 	}
 
