@@ -16,6 +16,7 @@ public class Transformation implements NetworkPathConfiguration {
 	public static final String LOCAL_SOURCE_TYPE = "local_file";
 	public static final String LOCAL_DIRECTORY_LISTING= "directory_listing";
 	public static final String REMOTE_NETWORK_SOURCE_TYPE = "remote_network";
+	public static final String LOCAL_NETWORK_SOURCE_TYPE = "local_network";
 	
     @XmlAttribute(name = "name", required = true)
     protected String name;
