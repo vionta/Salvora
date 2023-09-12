@@ -1,6 +1,7 @@
 package net.vionta.salvora.server.request;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import net.vionta.salvora.config.dto.PathParameter;
 import net.vionta.salvora.config.dto.RequestParameter;
 import net.vionta.salvora.config.dto.TransformationParameter;
 import net.vionta.salvora.server.ServerImpl;
+import static net.vionta.salvora.server.routings.path.PathParamAdjust.adjustPath;
 
 public class ParameterCalculation {
 
@@ -36,8 +38,18 @@ public class ParameterCalculation {
 		for (PathParameter param : step.getPathParameters()) {
 			String pathParamKey = param.getRequestKey();
 			LOGGER.debug("Getting Path Param :" + pathParamKey + " for " + param.getTransformationParamName());
-			ParameterInstance pathInstance = new ParameterInstance(param, request.pathParam(pathParamKey));
-			transformationParameters.add(pathInstance);
+			//get the provided value
+			String pathParamValue = request.pathParam(pathParamKey);
+			if(param.getValue()!=null && pathParamValue!=null) {
+				//adjust the text template value with the provided value
+				Map<String, String> adjustParameters = new HashMap<String, String>(1);
+				adjustParameters.put(pathParamKey, pathParamValue);
+				pathParamValue  = adjustPath(param.getValue(), adjustParameters);
+			}
+			//We return the suplied or the adjusted parameter, 
+			//depending on the case.
+			ParameterInstance pathInstance = new ParameterInstance(param, pathParamValue);
+			transformationParameters.add(pathInstance);	
 		}
 
 		// Handle list of query params
@@ -46,6 +58,11 @@ public class ParameterCalculation {
 			List<String> queryParam = request.queryParam(param.getRequestKey());
 			if (queryParam != null && !queryParam.isEmpty()) {
 				String queryParamValue = queryParam.get(0);
+				if( param.getValue()!=null) {
+					Map<String, String> adjustingParameter = new HashMap<String, String>(1);
+					adjustingParameter.put(param.getRequestKey(), queryParamValue);
+					queryParamValue = adjustPath(param.getValue(), adjustingParameter);
+				}
 				transformationParameters.add(new ParameterInstance(param, queryParamValue));
 			} else if(param.getDefaultValue()!=null) {
 				transformationParameters.add(new ParameterInstance(param, param.getDefaultValue()));
@@ -66,6 +83,7 @@ public class ParameterCalculation {
 	/**
 	 * Prepares the list of parameters from the step.
 	 * 
+	 * @deprecated
 	 * @param step
 	 * @param request
 	 * @return The list of parameters for the Xslt Transformation
@@ -78,10 +96,18 @@ public class ParameterCalculation {
 		for (PathParameter param : step.getPathParameters()) {
 			String pathParamKey = param.getRequestKey();
 			LOGGER.debug("Getting Path Param :" + pathParamKey + " for " + param.getTransformationParamName());
-			String pathParam = request.pathParam(pathParamKey);
-			LOGGER.debug("Path Param :" + pathParamKey + " -> " + pathParam);
-			transformationParameters.put(param.getTransformationParamName(), pathParam);
-			LOGGER.debug("[" + param.getTransformationParamName() + " -> " + pathParam + "]");
+			//get the provided value
+			String pathParamValue = request.pathParam(pathParamKey);
+			if(param.getValue()!=null && pathParamValue!=null) {
+				//adjust the text template value with the provided value
+				Map<String, String> adjustParameters = new HashMap<String, String>(1);
+				adjustParameters.put(pathParamKey, pathParamValue);
+				pathParamValue  = adjustPath(param.getValue(), adjustParameters);
+			}			
+			
+			LOGGER.debug("Path Param :" + pathParamKey + " -> " + pathParamValue);
+			transformationParameters.put(param.getTransformationParamName(), pathParamValue);
+			LOGGER.debug("[" + param.getTransformationParamName() + " -> " + pathParamValue + "]");
 		}
 
 		// Handle list of query params
@@ -90,7 +116,12 @@ public class ParameterCalculation {
 			List<String> queryParam = request.queryParam(param.getRequestKey());
 			if (queryParam != null && !queryParam.isEmpty()) {
 				String queryParamValue = queryParam.get(0);
-				transformationParameters.put(param.getTransformationParamName(), queryParamValue);
+				if( param.getValue()!=null) {
+					Map<String, String> adjustingParameter = new HashMap<String, String>(1);
+					adjustingParameter.put(param.getRequestKey(), queryParamValue);
+					queryParamValue = adjustPath(param.getValue(), adjustingParameter);
+				}
+				transformationParameters.put(param.getTransformationParamName(), queryParamValue);			
 			} else if(param.getDefaultValue()!=null) {
 				transformationParameters.put(param.getTransformationParamName(), param.getDefaultValue());
 			}
