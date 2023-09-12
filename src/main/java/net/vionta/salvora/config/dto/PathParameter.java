@@ -38,6 +38,12 @@ public class PathParameter {
     protected String transformationParamName;
     @XmlAttribute(name = "default")
     protected String defaultValue;
+    /**
+     * A value expression that can be modified with the path 
+     * extracted value.
+     */
+    @XmlAttribute(name = "value")
+    protected String value;
     @XmlAttribute(name = "input-port")
     protected Boolean inputPort = Boolean.FALSE;
 
@@ -95,6 +101,15 @@ public class PathParameter {
 
 	public void setDefaultValue(String defaultValue) {
 		this.defaultValue = defaultValue;
+	}
+
+	
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
 	}
 
 	public Boolean getInputPort() {
