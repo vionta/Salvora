@@ -10,7 +10,7 @@ import net.vionta.salvora.server.routings.TransformationUrlCalculation;
 public class PathParamAdjust {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(PathParamAdjust.class);
-
+	
 	public static String adjustPath(final String path, final Map<String, String> pathParams) {
 		LOGGER.debug(" Path {} ", path);
 		String adjustedPath = path;
