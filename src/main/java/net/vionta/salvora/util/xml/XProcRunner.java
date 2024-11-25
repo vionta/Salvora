@@ -20,6 +20,7 @@ import com.xml_project.morganaxproc3.XProcOutput;
 import com.xml_project.morganaxproc3.XProcPipeline;
 import com.xml_project.morganaxproc3.XProcResult;
 import com.xml_project.morganaxproc3.XProcSource;
+import com.xml_project.morganaxproc3.compiler.StaticError;
 import com.xml_project.morganaxproc3.compiler.XProcCompilerException;
 import com.xml_project.morganaxproc3.documents.XProcDocument;
 
@@ -76,7 +77,7 @@ public class XProcRunner {
 			LOGGER.debug(" Trigger "+trigger.getName()+" was ()"+output.wasSuccessful());
 
 			if(!output.wasSuccessful()) {
-				LOGGER.debug(output.getErrorDocumentSerialized(Boolean.TRUE));
+				LOGGER.error(output.getErrorDocumentSerialized(Boolean.TRUE));
 			} 
 			
 //			/* Check if execution was successful */
@@ -97,13 +98,14 @@ public class XProcRunner {
 
 			//We don't throw errors on trigger failures. 
 		} catch(XProcCompilerException ex) {
-			LOGGER.error(" XProc Compilation Error ", ex.getCause());
+			LOGGER.error(" XProc Compilation Error {1}"+ ex.getMessage());
+			
+			for (StaticError staticError : ex.getErrorList()) {
+				LOGGER.error(" Error "+ staticError.getCode()+" : " +staticError.toString());
+			}
 		}	catch (Exception e) {
-			e.printStackTrace();
-			ErrorManager.logError(null, "Error ejecutando Xproc  "+trigger.getName()+ "| Causa :"+e.getMessage()+" - "+e.getCause());
-			LOGGER.error(" XProc Error: (1)", e.getCause());
-			LOGGER.error(" XProc Error: {}", e.getCause());
-			LOGGER.error(" XProc Error: "+ e.getMessage());
+			ErrorManager.logError(null, "Error ejecutando Xproc  "+trigger.getName()+"| Causa :"+e.getMessage()+" - "+e.getCause());
+			LOGGER.error(" XProc Error: (1)" + e.getCause());
 			e.printStackTrace();
 		}
 
