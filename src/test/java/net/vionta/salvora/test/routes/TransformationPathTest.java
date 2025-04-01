@@ -11,9 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.vionta.salvora.config.dto.FileMapping;
 import net.vionta.salvora.config.dto.PathParameter;
 import net.vionta.salvora.config.dto.RequestParameter;
-import net.vionta.salvora.config.dto.Transformation;
 import net.vionta.salvora.config.dto.TransformationStep;
 
 class TransformationPathTest {
@@ -41,7 +41,7 @@ class TransformationPathTest {
 		pp.setRequestKey("entity");
 		pp.setTransformationParamName("LOCATION");
 		step.getPathParameters().add(pp);
-		Transformation transformation = new Transformation();
+		FileMapping transformation = new FileMapping();
 		transformation.getTransformationSteps().add(step);
 
 		LOGGER.debug("Testig {}", defaultParameterMap);
