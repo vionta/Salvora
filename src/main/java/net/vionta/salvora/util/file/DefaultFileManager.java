@@ -76,7 +76,7 @@ public class DefaultFileManager   {
 					response.end(contents);
 
 			} catch (IOException e) {
-				logger.error("Deleting file failed with cause:");
+				logger.error("Read file failed with cause:");
 				logger.error(""+e.getCause());
 			}
 	}
