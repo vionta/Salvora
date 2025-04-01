@@ -22,9 +22,11 @@ public class Trigger  implements ParameterSetElement {
     protected String name;
     @XmlAttribute(name = "source", required = true)
     protected String source;
+    @XmlAttribute(name = "type", required = true)
+    protected String type = TRIGGER_TYPE_XPROC; 
+
     @XmlAttribute(name = "input")
-    protected String input;
-    
+    protected String input;    
     @XmlAttribute(name = "before")
     protected Boolean before = Boolean.FALSE;
     
@@ -39,9 +41,7 @@ public class Trigger  implements ParameterSetElement {
     @XmlAttribute(name = "content")
     protected String content = TRIGGER_CONTENT_NONE ;
     
-    @XmlAttribute(name = "type", required = true)
-    protected String type = TRIGGER_TYPE_XPROC; 
-
+  
     @XmlElement(name="path-parameter", type = PathParameter.class)
     protected List<PathParameter> pathParameters = new ArrayList<PathParameter>();
     @XmlElement(name="request-parameter", type = RequestParameter.class)
