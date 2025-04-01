@@ -26,7 +26,6 @@ class ConfigMappingTests {
 	void configMappingTests() throws TransformerException, SAXException, IOException, ParserConfigurationException {
 		String correctionPath = "./src/test/resources/";
 		SalvoraApplication readMappingFile2 = readMappingFile(correctionPath+"xmls/sconf/sample.xml");
-
 		assertTrue(readMappingFile2.getFileMappings().size()>2);
 	}
 	
