@@ -93,6 +93,7 @@ public final class HttpRoutings {
 					sendFile(request, path);
 					TriggerChainProcces.afterTriggers(fileMapping.getTriggers(), request);
 				} else {
+					LOGGER.error("Error returning fle"+path);
 					ErrorManager.notifyError(request.response(), "File not found", 404);				
 				}
 			} catch (Exception e) {
