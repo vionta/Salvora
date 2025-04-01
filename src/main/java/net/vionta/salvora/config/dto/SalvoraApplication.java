@@ -11,16 +11,15 @@ import jakarta.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "fileMappings",
-    "transformations"
+    "fileMappings"
 })
 @XmlRootElement(name = "salvora-application")
 public class SalvoraApplication {
 
     @XmlElement(name = "collection", type=FileMapping.class)
     protected List<FileMapping> fileMappings = new ArrayList<FileMapping>();
-    @XmlElement(name = "transformation", type=Transformation.class)
-    protected List<Transformation> transformations = new ArrayList<Transformation>();
+//    @XmlElement(name = "collection", type=Transformation.class)
+//    protected List<Transformation> transformations = new ArrayList<Transformation>();
 	
     public List<FileMapping> getFileMappings() {
 		return fileMappings;
@@ -28,15 +27,16 @@ public class SalvoraApplication {
 	public void setFileMappings(List<FileMapping> fileMapping) {
 		this.fileMappings = fileMapping;
 	}
-	public List<Transformation> getTransformations() {
-		return transformations;
-	}
-	public void setTransformations(List<Transformation> transformation) {
-		this.transformations = transformation;
-	}
+//	public List<Transformation> getTransformations() {
+//		return transformations;
+//	}
+//	public void setTransformations(List<Transformation> transformation) {
+//		this.transformations = transformation;
+//	}
 	@Override
 	public String toString() {
-		return "SalvoraApplication [fileMappings=" + fileMappings + ", transformation=" + transformations + "]";
+		return "SalvoraApplication [fileMappings=" + fileMappings + /*", transformation=" + transformations +*/ "]";
+//		return "SalvoraApplication [ transformation=" + transformations + "]";
 	}
     
 }
