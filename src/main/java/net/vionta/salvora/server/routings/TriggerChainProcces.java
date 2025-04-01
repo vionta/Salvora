@@ -17,9 +17,14 @@ import net.vionta.salvora.util.xml.XProcRunner;
 public class TriggerChainProcces {
 
 	static Logger LOGGER = LoggerFactory.getLogger(TriggerChainProcces.class);
+	static Logger TRIGGER_LOGGER = LoggerFactory.getLogger(net.vionta.salvora.server.routing.log.TriggerRouting.class);
 
 	public static void beforeTriggers(List<Trigger> triggers, RoutingContext request) {
-		for(Trigger trigger: triggers) {
+		
+		LOGGER.info("Before Triggers: " + String.valueOf( triggers != null));
+		if(triggers!=null) LOGGER.info(" Size "+triggers.size());
+		for(Trigger trigger: triggers) {			
+			LOGGER.info("Trigger : " + trigger.getName() +" - Before: "+trigger.getBefore());
 			if(trigger.getBefore()) { runTrigger(trigger, request); }
 		}
 	}
@@ -27,6 +32,7 @@ public class TriggerChainProcces {
 	private static void runTrigger(Trigger trigger, RoutingContext request) {
 		try {
 			LOGGER.info("running trigger () " + trigger.getName());
+			TRIGGER_LOGGER.info("running trigger () " + trigger.getName());
 			XProcRunner.run(trigger, "", ParameterCalculation.buildTransformationParameterList(trigger, request));
 		} catch (Exception e) {
 			LOGGER.error("Failure runnign trigger "+trigger.getName()+" due to ()"+e.getCause());
