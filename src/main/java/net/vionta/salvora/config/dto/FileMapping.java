@@ -2,7 +2,9 @@ package net.vionta.salvora.config.dto;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -12,7 +14,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "collection", propOrder = {
-    "description", "triggers"
+    "description", "triggers", "transformationSteps"
 })
 public class FileMapping implements NetworkPathConfiguration  {
 
@@ -20,11 +22,14 @@ public class FileMapping implements NetworkPathConfiguration  {
     protected String description;
     @XmlAttribute(name = "name", required = false)
     protected String name;
+    
+    //Range Paths
     @XmlAttribute(name = "base-internal-path", required = true)
     protected String baseInternalPath;
     @XmlAttribute(name = "base-path", required = true)
     protected String basePath;
     
+    //Single Paths
     @XmlAttribute(name = "internal-path")
     protected String internalPath;
     @XmlAttribute(name = "path")
@@ -37,7 +42,10 @@ public class FileMapping implements NetworkPathConfiguration  {
     protected Boolean writeAllowed = false ;
     @XmlAttribute(name = "delete-allowed")
     protected Boolean deleteAllowed = false;
-
+    
+    @XmlElement(name="step", type = TransformationStep.class)
+    protected List<TransformationStep> transformationSteps = new ArrayList<TransformationStep>();
+    
     @XmlElement(name="trigger", type = Trigger.class)
     protected List<Trigger> triggers = new ArrayList<Trigger>();
 
@@ -138,6 +146,15 @@ public class FileMapping implements NetworkPathConfiguration  {
 	public String getType() {
 		return LOCAL_SOURCE_TYPE;
 	}
+	
+
+	public List<TransformationStep> getTransformationSteps() {
+		return transformationSteps;
+	}
+
+	public void setTransformationSteps(List<TransformationStep> transformationSteps) {
+		this.transformationSteps = transformationSteps;
+	}
 
 	@Override
 	public String toString() {
@@ -145,10 +162,14 @@ public class FileMapping implements NetworkPathConfiguration  {
 		if(name!=null) mappingSerialization.append(name).append(" : ");
 		if(basePath!=null) mappingSerialization.append(" |  Base Path ").append(basePath).append(" -> ").append(baseInternalPath);
 		if(path!=null) mappingSerialization.append(" | Path ").append(path).append(" -> ").append(internalPath);
-		if(triggers!=null ) mappingSerialization.append(" \n trigger count(").append(triggers.size()).append(")")	;
+		if(triggers!=null && !triggers.isEmpty()) {
+			mappingSerialization.append(" \n       +- trigger count(").append(triggers.size()).append(")")	;
+			for(Trigger ti : triggers) {
+				mappingSerialization.append("["+ti.getName()+"]");
+			}
+		}
+		mappingSerialization.append("\n");
 		return mappingSerialization.toString();
 	}
-
-	
 	
 }
