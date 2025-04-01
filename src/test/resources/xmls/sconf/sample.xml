@@ -2,24 +2,24 @@
 <sal:salvora-application
     xmlns:sal="net:vionta:schemas:salvora:mapping:v1.0"
     >
-  <file-mapping
+  <collection
       name="configuration" base-path="configuration"
       write-allowed="false" file-list="false" >
     <description>Configuration path</description>
-  </file-mapping>
-  <file-mapping
+  </collection>
+  <collection
       name="form" base-path="form"
       write-allowed="false"
       >
-  </file-mapping>
-  <file-mapping
+  </collection>
+  <collection
       name="xsltforms" base-path="xsltforms"
       write-allowed="false" />
-  <file-mapping
+  <collection
       name="data" base-path="data"
       file-list="true"
       write-allowed="true" />
-    <file-mapping
+    <collection
       name="config" base-path="config"
       file-list="false"
       write-allowed="true" />
