@@ -36,7 +36,7 @@ public final class HttpCommandLineRoutings {
 	 * @param options
 	 * @param router
 	 */
-	public static void configureParameterRoutes(Options options,  Router router) {
+	public static void configureCmdParameterRoutes(Options options,  Router router) {
 		router.route().path("/" + options.getFormsPath() + "/*").method(HttpMethod.GET).handler(request -> {
 			sendFile(request);
 		});
