@@ -92,9 +92,4 @@ public class DefaultPathCalculator implements IPathCalculator {
 
 	}
 
-	public static void main(String[] args) {
-		System.out.println("abcde".substring(0,"abcde".length()));
-		System.out.println("abcde".length());
-		System.out.println("abcde".substring(1,"abcde".length()));
-	}
 }
