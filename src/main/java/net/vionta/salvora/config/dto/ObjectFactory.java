@@ -28,13 +28,7 @@ public class ObjectFactory {
         return new FileMapping();
     }
 
-    /**
-     * Create an instance of {@link Transformation }
-     * 
-     */
-    public NetworkPathConfiguration createTransformation() {
-        return new Transformation();
-    }
+
 
     /**
      * Create an instance of {@link TransformationStep }
