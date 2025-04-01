@@ -27,6 +27,7 @@ import com.xml_project.morganaxproc3.documents.XProcDocument;
 import net.vionta.salvora.config.dto.TransformationParameter;
 import net.vionta.salvora.config.dto.Trigger;
 import net.vionta.salvora.server.response.error.ErrorManager;
+import net.vionta.salvora.server.routing.log.TriggerRouting;
 import nu.validator.saxtree.Document;
 
 public class XProcRunner {
@@ -35,7 +36,7 @@ public class XProcRunner {
 
 	public static void run(Trigger trigger, String content, List<TransformationParameter> parameters) {
 		
-		LOGGER.debug(" Running trigger "+trigger.getName());
+		LOGGER.info(" Running trigger "+trigger.getName());
 		/* Create a source with the pipeline */
 		
 		try{
