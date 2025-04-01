@@ -19,6 +19,11 @@ class DefaultFileManagerTest {
 	}
 
 	@Test
+	void testFileError() {
+		Assertions.assertFalse(DefaultFileManager.fileExists("./some/file/thatdoesnotexist.java"));
+	}
+
+	@Test
 	void testWriteFile() throws IOException {
 		DefaultFileManager.writeFile(TEST_FILE_NAME, TEST_STRING);
 	}
